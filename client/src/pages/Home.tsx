@@ -24,24 +24,21 @@ export default function Home() {
   const category = searchParams.get("category") || undefined;
   const search = searchParams.get("search") || undefined;
 
+  const noArticlesMessage = language === 'en' 
+    ? "No articles in this category yet – check back soon." 
+    : "لا توجد مقالات في هذا القسم بعد - يرجى العودة لاحقاً.";
+
   const { data: articles, isLoading, error, refetch } = useArticles({
     category,
     search,
     language,
-    limit: 40
+    limit: 50
   });
 
   // Re-fetch when language, category or search changes
   useEffect(() => {
     refetch();
   }, [language, category, search, refetch]);
-
-  const featuredArticle = articles?.[0];
-  const gridArticles = articles?.slice(1);
-
-  const noArticlesMessage = language === 'en' 
-    ? "No articles in this category yet – check back soon." 
-    : "لا توجد مقالات في هذا القسم بعد - يرجى العودة لاحقاً.";
 
   return (
     <div className={`min-h-screen bg-background flex flex-col font-sans ${dir === 'rtl' ? 'rtl' : 'ltr'}`}>

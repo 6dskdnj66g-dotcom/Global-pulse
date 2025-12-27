@@ -84,7 +84,10 @@ export function Header() {
                   px-4 py-2 text-sm font-semibold hover:text-primary transition-colors rounded-full hover:bg-primary/5
                   ${isActive ? 'text-primary bg-primary/5' : 'text-foreground/80'}
                 `}
-                onClick={() => setLocation(`/?category=${category}`)}
+                onClick={() => {
+                  setLocation(`/?category=${category}`);
+                  setIsMenuOpen(false);
+                }}
               >
                 {t(`nav.${category.toLowerCase()}`)}
               </Link>
@@ -93,15 +96,18 @@ export function Header() {
           
           <DropdownMenu>
             <DropdownMenuTrigger className="px-4 py-2 text-sm font-semibold hover:text-primary transition-colors outline-none flex items-center gap-1">
-              {t('nav.more') || 'More'}
+              {t('nav.more')}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {CATEGORIES.slice(5).map((category) => (
                 <DropdownMenuItem key={category} asChild>
                   <Link 
                     href={`/?category=${category}`} 
-                    className={`w-full cursor-pointer ${location.includes(`category=${category}`) ? 'text-primary' : ''}`}
-                    onClick={() => setLocation(`/?category=${category}`)}
+                    className={`w-full cursor-pointer ${location.includes(`category=${category}`) ? 'text-primary font-bold' : ''}`}
+                    onClick={() => {
+                      setLocation(`/?category=${category}`);
+                      setIsMenuOpen(false);
+                    }}
                   >
                     {t(`nav.${category.toLowerCase()}`)}
                   </Link>

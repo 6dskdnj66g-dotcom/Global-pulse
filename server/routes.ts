@@ -73,15 +73,15 @@ export async function registerRoutes(
 function categorizeArticle(title: string, content: string): string {
   const combined = (title + " " + content).toLowerCase();
   
-  if (combined.match(/politics|government|election|parliament|minister|diplomacy|سياسة|حكومة|انتخابات|برلمان|وزير|دبلوماسية/)) return "Politics";
-  if (combined.match(/economy|business|finance|market|stock|trade|investment|inflation|اقتصاد|أعمال|مال|سوق|تجارة|استثمار|تضخم/)) return "Economy";
-  if (combined.match(/social|society|people|community|human rights|welfare|اجتماعي|مجتمع|ناس|حقوق الإنسان|رفاهية/)) return "Social";
-  if (combined.match(/tech|science|digital|ai|software|robot|space|innovation|تكنولوجيا|علوم|ذكاء|فضاء|ابتكار/)) return "Technology";
-  if (combined.match(/sport|football|match|fifa|olympic|tennis|basketball|رياضة|كرة|مباراة|أولمبياد/)) return "Sports";
-  if (combined.match(/health|medical|virus|hospital|doctor|vaccine|pandemic|صحة|طبي|فيروس|مستشفى|طبيب|لقاح|وباء/)) return "Health";
-  if (combined.match(/entertainment|movie|music|celebrity|cinema|arts|showbiz|ترفيه|سينما|موسيقى|فنون|مشاهير/)) return "Entertainment";
-  if (combined.match(/education|school|university|student|learning|teach|تعليم|مدرسة|جامعة|طالب|تعلم/)) return "Education";
-  if (combined.match(/culture|heritage|tradition|literature|history|ثقافة|تراث|تقاليد|أدب|تاريخ/)) return "Culture";
+  if (combined.match(/politics|government|election|parliament|minister|diplomacy|president|senate|سياسة|حكومة|انتخابات|برلمان|وزير|دبلوماسية/)) return "Politics";
+  if (combined.match(/economy|business|finance|market|stock|trade|investment|inflation|crypto|اقتصاد|أعمال|مال|سوق|تجارة|استثمار|تضخم/)) return "Economy";
+  if (combined.match(/social|society|people|community|human rights|welfare|activism|اجتماعي|مجتمع|ناس|حقوق الإنسان|رفاهية/)) return "Social";
+  if (combined.match(/tech|science|digital|ai|software|robot|space|innovation|gadget|تكنولوجيا|علوم|ذكاء|فضاء|ابتكار/)) return "Technology";
+  if (combined.match(/sport|football|match|fifa|olympic|tennis|basketball|soccer|رياضة|كرة|مباراة|أولمبياد/)) return "Sports";
+  if (combined.match(/health|medical|virus|hospital|doctor|vaccine|pandemic|wellness|صحة|طبي|فيروس|مستشفى|طبيب|لقاح|وباء/)) return "Health";
+  if (combined.match(/entertainment|movie|music|celebrity|cinema|arts|showbiz|fashion|ترفيه|سينما|موسيقى|فنون|مشاهير/)) return "Entertainment";
+  if (combined.match(/education|school|university|student|learning|teach|academy|تعليم|مدرسة|جامعة|طالب|تعلم/)) return "Education";
+  if (combined.match(/culture|heritage|tradition|literature|history|museum|ثقافة|تراث|تقاليد|أدب|تاريخ/)) return "Culture";
   
   return "World";
 }
