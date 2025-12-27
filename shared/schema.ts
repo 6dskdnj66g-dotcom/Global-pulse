@@ -1,18 +1,29 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+export const articles = pgTable("articles", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  summary: text("summary").notNull(),
+  content: text("content"),
+  url: text("url").notNull(),
+  imageUrl: text("image_url"),
+  source: text("source").notNull(),
+  category: text("category").notNull(),
+  language: text("language").notNull().default('en'), // 'en' or 'ar'
+  publishedAt: timestamp("published_at").notNull(),
+  location: jsonb("location"), // { lat: number, lng: number, label: string } for the globe
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-});
+export const insertArticleSchema = createInsertSchema(articles).omit({ id: true });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type Article = typeof articles.$inferSelect;
+export type InsertArticle = z.infer<typeof insertArticleSchema>;
+
+export const CATEGORIES = [
+  "Politics", "Economy", "Social", "Business", "Education", 
+  "Culture", "Technology", "Sports", "World", "Health", "Entertainment"
+] as const;
+
+export const LANGUAGES = ["en", "ar"] as const;
