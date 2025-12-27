@@ -3,6 +3,7 @@ import { useLocation, Link } from "wouter";
 import { Header } from "@/components/Header";
 import { ArticleCard } from "@/components/ArticleCard";
 import { GlobeViz } from "@/components/GlobeViz";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useArticles, useSyncArticles } from "@/hooks/use-articles";
 import { useLanguage, useLanguageEffect } from "@/hooks/use-language";
 import { Loader2, RefreshCw } from "lucide-react";
@@ -104,11 +105,20 @@ export default function Home() {
             </div>
           </div>
 
-          {isLoading ? (
-            <div className="flex justify-center py-20">
-              <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            </div>
-          ) : error ? (
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="flex flex-col gap-4 p-4 rounded-xl border border-border/40 bg-card/50">
+                    <Skeleton className="h-48 w-full rounded-lg" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-full" />
+                      <Skeleton className="h-3 w-1/2" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : error ? (
             <div className="text-center py-20 text-destructive">
               <p>{t('error')}</p>
               <button onClick={() => window.location.reload()} className="underline mt-2">Try again</button>

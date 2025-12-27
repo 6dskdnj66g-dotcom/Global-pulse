@@ -2,9 +2,27 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
-import { z } from "zod";
+import Parser from "rss-parser";
 
-const NEWS_API_BASE = "https://newsapi.org/v2";
+const parser = new Parser({
+  customFields: {
+    item: [
+      ['media:content', 'mediaContent', { keepArray: true }],
+      ['media:thumbnail', 'mediaThumbnail'],
+      ['content:encoded', 'contentEncoded'],
+      ['description', 'description'],
+    ],
+  },
+});
+
+const FEEDS = [
+  { url: 'https://www.aljazeera.com/xml/rss/all.xml', lang: 'en', source: 'Al Jazeera English' },
+  { url: 'https://www.aljazeera.net/aljazeerarss/feed', lang: 'ar', source: 'Al Jazeera Arabic' },
+  { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', lang: 'en', source: 'BBC World News' },
+  { url: 'https://feeds.bbci.co.uk/arabic/world/rss.xml', lang: 'ar', source: 'BBC Arabic' },
+  { url: 'http://rss.cnn.com/rss/cnn_world.rss', lang: 'en', source: 'CNN World News' },
+  { url: 'https://www.reutersagency.com/feed/?best-topics=world&post_type=best', lang: 'en', source: 'Reuters World News' },
+];
 
 export async function registerRoutes(
   httpServer: Server,
@@ -49,86 +67,63 @@ export async function registerRoutes(
   return httpServer;
 }
 
-const CATEGORY_MAP: Record<string, string> = {
-  "Politics": "politics",
-  "Economy": "business",
-  "Social": "general",
-  "Business": "business",
-  "Education": "science",
-  "Culture": "entertainment",
-  "Technology": "technology",
-  "Sports": "sports",
-  "World": "general",
-  "Health": "health",
-  "Entertainment": "entertainment",
-  "Science": "science",
-  "General": "general"
-};
+function categorizeArticle(title: string, content: string): string {
+  const combined = (title + " " + content).toLowerCase();
+  if (combined.match(/politics|government|election|parliament|سياسة|حكومة|انتخابات/)) return "Politics";
+  if (combined.match(/economy|business|finance|market|stock|اقتصاد|أعمال|مال|سوق/)) return "Economy";
+  if (combined.match(/tech|science|digital|ai|software|تكنولوجيا|علوم|ذكاء/)) return "Technology";
+  if (combined.match(/sport|football|match|fifa|olympic|رياضة|كرة/)) return "Sports";
+  if (combined.match(/health|medical|virus|hospital|صحة|طبي/)) return "Health";
+  if (combined.match(/entertainment|movie|music|celebrity|ترفيه|سينما/)) return "Entertainment";
+  return "World";
+}
 
 async function syncAllNews() {
-  const apiKey = process.env.NEWS_API_KEY;
-  if (!apiKey) {
-    console.error("NEWS_API_KEY not found");
-    return;
-  }
-
-  console.log("Syncing real-time news from NewsAPI...");
+  console.log("Syncing real-time news from RSS feeds...");
   
-  const langs = ["en", "ar"];
-  const newsCategories = [
-    "Politics", "Economy", "Social", "Business", "Education", 
-    "Culture", "Technology", "Sports", "World", "Health", "Entertainment"
-  ];
+  const allArticles: any[] = [];
 
-  for (const lang of langs) {
-    for (const cat of newsCategories) {
-      try {
-        const newsApiCategory = CATEGORY_MAP[cat] || 'general';
-        
-        let url: string;
-        if (lang === 'ar') {
-          // NewsAPI everything for Arabic with better query
-          const arabicQuery = cat === 'Politics' ? 'سياسة' : 
-                             cat === 'Economy' ? 'اقتصاد' : 
-                             cat === 'Sports' ? 'رياضة' : 
-                             cat === 'Technology' ? 'تكنولوجيا' : 'أخبار';
-          
-          url = `${NEWS_API_BASE}/everything?q=${encodeURIComponent(arabicQuery)}&language=ar&apiKey=${apiKey}&pageSize=20&sortBy=publishedAt`;
-        } else {
-          // Top headlines for English
-          url = `${NEWS_API_BASE}/top-headlines?category=${newsApiCategory}&language=en&apiKey=${apiKey}&pageSize=20`;
+  await Promise.all(FEEDS.map(async (feed) => {
+    try {
+      const parsedFeed = await parser.parseURL(feed.url);
+      const items = parsedFeed.items.map(item => {
+        let imageUrl = null;
+        if (item.mediaContent?.[0]?.$.url) {
+          imageUrl = item.mediaContent[0].$.url;
+        } else if (item.enclosure?.url) {
+          imageUrl = item.enclosure.url;
+        } else if (item.mediaThumbnail?.[0]?.$.url) {
+          imageUrl = item.mediaThumbnail[0].$.url;
         }
 
-        const response = await fetch(url);
-        const data = await response.json();
+        const content = item.contentEncoded || item.content || item.description || "";
         
-        if (data.status === 'ok' && data.articles) {
-          const articlesToInsert = data.articles
-            .filter((a: any) => a.title && a.url && a.title !== '[Removed]')
-            .map((a: any) => ({
-              title: a.title,
-              summary: a.description || a.content || '',
-              content: a.content || '',
-              url: a.url,
-              imageUrl: a.urlToImage,
-              source: a.source?.name || 'Unknown',
-              category: cat,
-              language: lang,
-              publishedAt: a.publishedAt ? new Date(a.publishedAt) : new Date(),
-              location: generateRandomLocation(),
-            }));
-
-          if (articlesToInsert.length > 0) {
-            await storage.bulkCreateArticles(articlesToInsert);
-            console.log(`Synced ${articlesToInsert.length} ${lang} articles for ${cat}`);
-          }
-        } else if (data.status === 'error') {
-          console.error(`NewsAPI Error (${lang} ${cat}):`, data.message);
-        }
-      } catch (err) {
-        console.error(`Error syncing ${lang} ${cat}:`, err);
-      }
+        return {
+          title: item.title || "Untitled",
+          summary: item.description || item.contentSnippet || "",
+          content: content,
+          url: item.link || "",
+          imageUrl: imageUrl,
+          source: feed.source,
+          category: categorizeArticle(item.title || "", content),
+          language: feed.lang,
+          publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
+          location: generateRandomLocation(),
+        };
+      });
+      allArticles.push(...items.filter(a => a.url));
+    } catch (err) {
+      console.error(`Error syncing feed ${feed.url}:`, err);
     }
+  }));
+
+  // Sort by date descending and take latest
+  allArticles.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+  
+  // Deduplicate and insert
+  if (allArticles.length > 0) {
+    await storage.bulkCreateArticles(allArticles);
+    console.log(`Synced ${allArticles.length} articles from RSS feeds`);
   }
 }
 

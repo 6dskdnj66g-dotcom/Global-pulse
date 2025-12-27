@@ -41,7 +41,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
   }
 
   // Fallback image if none provided
-  const bgImage = article.imageUrl || "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80";
+  const bgImage = article.imageUrl || `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80&sig=${article.id}`;
 
   return (
     <motion.div
