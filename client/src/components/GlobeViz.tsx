@@ -21,22 +21,22 @@ export function GlobeViz({ height = 500 }: GlobeVizProps) {
     limit: 20
   });
 
-  // Prepare points data
+  // Preparare points data for regions
   const pointsData = useMemo(() => {
-    if (!articles) return [];
-    
-    // Filter articles with location data
-    return articles
-      .filter(a => a.location)
-      .map(article => ({
-        lat: (article.location as any).lat,
-        lng: (article.location as any).lng,
-        size: 0.5,
-        color: theme === 'dark' ? '#ef4444' : '#e11d48', // Red markers
-        title: article.title,
-        url: `/article/${article.id}`
-      }));
-  }, [articles, theme]);
+    return [
+      { lat: 25.0, lng: 45.0, title: "Middle East News", category: "Middle East", color: "#ef4444" },
+      { lat: 50.0, lng: 10.0, title: "Europe News", category: "Europe", color: "#3b82f6" },
+      { lat: 35.0, lng: 105.0, title: "Asia News", category: "Asia", color: "#10b981" },
+      { lat: 40.0, lng: -100.0, title: "North America News", category: "North America", color: "#f59e0b" },
+      { lat: -15.0, lng: -60.0, title: "South America News", category: "South America", color: "#8b5cf6" },
+      { lat: 0.0, lng: 20.0, title: "Africa News", category: "Africa", color: "#ec4899" }
+    ];
+  }, []);
+
+  const handlePointClick = (point: any) => {
+    // Navigate to homepage with category/search filter
+    window.location.href = `/?search=${encodeURIComponent(point.category)}`;
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -90,10 +90,10 @@ export function GlobeViz({ height = 500 }: GlobeVizProps) {
         pointsData={pointsData}
         pointAltitude={0.1}
         pointColor="color"
-        pointRadius="size"
+        pointRadius={0.5}
         pointsMerge={true}
         pointLabel="title"
-        onPointClick={(point: any) => window.location.href = point.url}
+        onPointClick={handlePointClick}
         labelsData={pointsData}
         labelLat="lat"
         labelLng="lng"
@@ -102,6 +102,7 @@ export function GlobeViz({ height = 500 }: GlobeVizProps) {
         labelDotRadius={0.5}
         labelColor={() => theme === 'dark' ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.9)'}
         labelResolution={2}
+        onLabelClick={handlePointClick}
       />
       
       {/* Overlay gradient for better integration */}
