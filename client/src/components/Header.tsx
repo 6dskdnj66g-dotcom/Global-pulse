@@ -74,29 +74,33 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-1">
-          {CATEGORIES.slice(0, 5).map((category) => (
-            <Link 
-              key={category} 
-              href={`/?category=${category}`}
-              className={`
-                px-4 py-2 text-sm font-semibold hover:text-primary transition-colors rounded-full hover:bg-primary/5
-                ${location.includes(`category=${category}`) ? 'text-primary bg-primary/5' : 'text-foreground/80'}
-              `}
-            >
-              {t(`nav.${category.toLowerCase()}`)}
-            </Link>
-          ))}
+          {CATEGORIES.slice(0, 5).map((category) => {
+            const isActive = location === `/?category=${category}` || (location === '/' && category === 'World' && !window.location.search);
+            return (
+              <Link 
+                key={category} 
+                href={`/?category=${category}`}
+                className={`
+                  px-4 py-2 text-sm font-semibold hover:text-primary transition-colors rounded-full hover:bg-primary/5
+                  ${isActive ? 'text-primary bg-primary/5' : 'text-foreground/80'}
+                `}
+                onClick={() => setLocation(`/?category=${category}`)}
+              >
+                {t(`nav.${category.toLowerCase()}`)}
+              </Link>
+            );
+          })}
           
           <DropdownMenu>
             <DropdownMenuTrigger className="px-4 py-2 text-sm font-semibold hover:text-primary transition-colors outline-none flex items-center gap-1">
-              More
+              {t('nav.more') || 'More'}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {CATEGORIES.slice(5).map((category) => (
                 <DropdownMenuItem key={category} asChild>
                   <Link 
                     href={`/?category=${category}`} 
-                    className="w-full cursor-pointer"
+                    className={`w-full cursor-pointer ${location.includes(`category=${category}`) ? 'text-primary' : ''}`}
                     onClick={() => setLocation(`/?category=${category}`)}
                   >
                     {t(`nav.${category.toLowerCase()}`)}

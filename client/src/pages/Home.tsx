@@ -28,16 +28,20 @@ export default function Home() {
     category,
     search,
     language,
-    limit: 20
+    limit: 40
   });
 
-  // Re-fetch when language changes
+  // Re-fetch when language, category or search changes
   useEffect(() => {
     refetch();
-  }, [language, refetch]);
+  }, [language, category, search, refetch]);
 
   const featuredArticle = articles?.[0];
   const gridArticles = articles?.slice(1);
+
+  const noArticlesMessage = language === 'en' 
+    ? "No articles in this category yet – check back soon." 
+    : "لا توجد مقالات في هذا القسم بعد - يرجى العودة لاحقاً.";
 
   return (
     <div className={`min-h-screen bg-background flex flex-col font-sans ${dir === 'rtl' ? 'rtl' : 'ltr'}`}>
@@ -132,7 +136,7 @@ export default function Home() {
               
               {(!articles || articles.length === 0) && (
                 <div className="col-span-full py-20 text-center opacity-60">
-                  <p className="text-xl font-serif">No articles found in this category.</p>
+                  <p className="text-xl font-serif">{noArticlesMessage}</p>
                 </div>
               )}
             </div>

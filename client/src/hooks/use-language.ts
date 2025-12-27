@@ -25,6 +25,7 @@ const translations: Record<string, Record<Language, string>> = {
   'nav.entertainment': { en: 'Entertainment', ar: 'ترفيه' },
   'nav.science': { en: 'Science', ar: 'علوم' },
   'nav.general': { en: 'General', ar: 'عام' },
+  'nav.more': { en: 'More', ar: 'المزيد' },
   'search.placeholder': { en: 'Search news...', ar: 'بحث في الأخبار...' },
   'hero.breaking': { en: 'Breaking News', ar: 'عاجل' },
   'hero.featured': { en: 'Featured Story', ar: 'قصة مميزة' },
