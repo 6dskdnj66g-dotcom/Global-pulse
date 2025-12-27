@@ -150,6 +150,7 @@ export function Header() {
           <button 
             onClick={toggleTheme}
             className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground transition-colors"
+            data-testid="button-theme-toggle"
           >
             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>

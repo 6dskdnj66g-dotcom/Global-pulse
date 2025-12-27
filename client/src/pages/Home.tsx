@@ -21,16 +21,16 @@ export default function Home() {
   
   // Parse Query Params
   const searchParams = new URLSearchParams(window.location.search);
-  const category = searchParams.get("category") || undefined;
-  const search = searchParams.get("search") || undefined;
+  const categoryParam = searchParams.get("category") || undefined;
+  const searchParam = searchParams.get("search") || undefined;
 
   const noArticlesMessage = language === 'en' 
     ? "No articles in this category yet – check back soon." 
     : "لا توجد مقالات في هذا القسم بعد - يرجى العودة لاحقاً.";
 
   const { data: articles, isLoading, error, refetch } = useArticles({
-    category,
-    search,
+    category: categoryParam,
+    search: searchParam,
     language,
     limit: 50
   });
@@ -38,7 +38,7 @@ export default function Home() {
   // Re-fetch when language, category or search changes
   useEffect(() => {
     refetch();
-  }, [language, category, search, refetch]);
+  }, [language, categoryParam, searchParam, refetch]);
 
   return (
     <div className={`min-h-screen bg-background flex flex-col font-sans ${dir === 'rtl' ? 'rtl' : 'ltr'}`}>
@@ -46,7 +46,7 @@ export default function Home() {
 
       <main className="flex-1 pb-20">
         {/* Hero Section */}
-        {!search && !category && (
+        {!searchParam && !categoryParam && (
           <section className="relative w-full py-8 md:py-12 lg:py-16 overflow-hidden">
             <div className="container mx-auto px-4">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -86,7 +86,7 @@ export default function Home() {
         <section className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
-              {category ? t(`nav.${category.toLowerCase()}`) : search ? (language === 'en' ? `Search Results: ${search}` : `نتائج البحث: ${search}`) : t('latest.news')}
+              {categoryParam ? t(`nav.${categoryParam.toLowerCase()}`) : searchParam ? (language === 'en' ? `Search Results: ${searchParam}` : `نتائج البحث: ${searchParam}`) : t('latest.news')}
             </h2>
             <div className="flex items-center gap-2">
               {syncMutation.isPending && (
@@ -127,7 +127,7 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {/* If filtering, show all articles. If home, skip the featured one which is already shown */}
-              {(search || category ? articles : gridArticles)?.map((article) => (
+              {(searchParam || categoryParam ? articles : gridArticles)?.map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
               
