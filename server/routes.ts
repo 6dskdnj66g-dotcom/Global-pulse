@@ -82,9 +82,11 @@ async function syncAllNews() {
         const newsApiCategory = CATEGORY_MAP[cat] || 'general';
         
         // NewsAPI top-headlines or everything
-        const response = await fetch(
-          `${NEWS_API_BASE}/top-headlines?category=${newsApiCategory}&language=${lang}&apiKey=${apiKey}&pageSize=20`
-        );
+        const url = lang === 'ar' 
+          ? `${NEWS_API_BASE}/everything?q=${encodeURIComponent('أخبار')}&language=ar&apiKey=${apiKey}&pageSize=20`
+          : `${NEWS_API_BASE}/top-headlines?category=${newsApiCategory}&language=${lang}&apiKey=${apiKey}&pageSize=20`;
+
+        const response = await fetch(url);
         
         const data = await response.json();
         
