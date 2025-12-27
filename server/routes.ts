@@ -60,7 +60,9 @@ const CATEGORY_MAP: Record<string, string> = {
   "Sports": "sports",
   "World": "general",
   "Health": "health",
-  "Entertainment": "entertainment"
+  "Entertainment": "entertainment",
+  "Science": "science",
+  "General": "general"
 };
 
 async function syncAllNews() {
@@ -73,21 +75,31 @@ async function syncAllNews() {
   console.log("Syncing real-time news from NewsAPI...");
   
   const langs = ["en", "ar"];
-  const newsCategories = ["Politics", "Business", "Technology", "Sports", "Health", "Entertainment", "World"];
+  const newsCategories = [
+    "Politics", "Economy", "Social", "Business", "Education", 
+    "Culture", "Technology", "Sports", "World", "Health", "Entertainment"
+  ];
 
   for (const lang of langs) {
     for (const cat of newsCategories) {
       try {
-        const query = lang === 'ar' ? 'أخبار' : 'news';
         const newsApiCategory = CATEGORY_MAP[cat] || 'general';
         
-        // NewsAPI top-headlines or everything
-        const url = lang === 'ar' 
-          ? `${NEWS_API_BASE}/everything?q=${encodeURIComponent('أخبار')}&language=ar&apiKey=${apiKey}&pageSize=20`
-          : `${NEWS_API_BASE}/top-headlines?category=${newsApiCategory}&language=${lang}&apiKey=${apiKey}&pageSize=20`;
+        let url: string;
+        if (lang === 'ar') {
+          // NewsAPI everything for Arabic with better query
+          const arabicQuery = cat === 'Politics' ? 'سياسة' : 
+                             cat === 'Economy' ? 'اقتصاد' : 
+                             cat === 'Sports' ? 'رياضة' : 
+                             cat === 'Technology' ? 'تكنولوجيا' : 'أخبار';
+          
+          url = `${NEWS_API_BASE}/everything?q=${encodeURIComponent(arabicQuery)}&language=ar&apiKey=${apiKey}&pageSize=20&sortBy=publishedAt`;
+        } else {
+          // Top headlines for English
+          url = `${NEWS_API_BASE}/top-headlines?category=${newsApiCategory}&language=en&apiKey=${apiKey}&pageSize=20`;
+        }
 
         const response = await fetch(url);
-        
         const data = await response.json();
         
         if (data.status === 'ok' && data.articles) {
@@ -106,8 +118,12 @@ async function syncAllNews() {
               location: generateRandomLocation(),
             }));
 
-          await storage.bulkCreateArticles(articlesToInsert);
-          console.log(`Synced ${articlesToInsert.length} ${lang} articles for ${cat}`);
+          if (articlesToInsert.length > 0) {
+            await storage.bulkCreateArticles(articlesToInsert);
+            console.log(`Synced ${articlesToInsert.length} ${lang} articles for ${cat}`);
+          }
+        } else if (data.status === 'error') {
+          console.error(`NewsAPI Error (${lang} ${cat}):`, data.message);
         }
       } catch (err) {
         console.error(`Error syncing ${lang} ${cat}:`, err);

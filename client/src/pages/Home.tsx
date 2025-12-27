@@ -3,7 +3,7 @@ import { useLocation, Link } from "wouter";
 import { Header } from "@/components/Header";
 import { ArticleCard } from "@/components/ArticleCard";
 import { GlobeViz } from "@/components/GlobeViz";
-import { useArticles } from "@/hooks/use-articles";
+import { useArticles, useSyncArticles } from "@/hooks/use-articles";
 import { useLanguage, useLanguageEffect } from "@/hooks/use-language";
 import { Loader2, RefreshCw } from "lucide-react";
 import { CATEGORIES } from "@shared/schema";
@@ -12,6 +12,11 @@ export default function Home() {
   useLanguageEffect();
   const [location] = useLocation();
   const { language, t, dir } = useLanguage();
+  const syncMutation = useSyncArticles();
+
+  const handleSync = () => {
+    syncMutation.mutate();
+  };
   
   // Parse Query Params
   const searchParams = new URLSearchParams(window.location.search);
@@ -81,13 +86,22 @@ export default function Home() {
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
               {category ? t(`nav.${category.toLowerCase()}`) : search ? `Search: ${search}` : t('latest.news')}
             </h2>
-            <button 
-              onClick={() => refetch()} 
-              className="p-2 hover:bg-muted rounded-full transition-colors"
-              title="Refresh News"
-            >
-              <RefreshCw className="w-5 h-5 text-muted-foreground" />
-            </button>
+            <div className="flex items-center gap-2">
+              {syncMutation.isPending && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {language === 'en' ? 'Syncing...' : 'جاري المزامنة...'}
+                </div>
+              )}
+              <button 
+                onClick={handleSync} 
+                disabled={syncMutation.isPending}
+                className="p-2 hover:bg-muted rounded-full transition-colors disabled:opacity-50"
+                title="Sync News"
+              >
+                <RefreshCw className={`w-5 h-5 text-muted-foreground ${syncMutation.isPending ? 'animate-spin' : ''}`} />
+              </button>
+            </div>
           </div>
 
           {isLoading ? (

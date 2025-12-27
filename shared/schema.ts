@@ -23,7 +23,7 @@ export type InsertArticle = z.infer<typeof insertArticleSchema>;
 
 export const CATEGORIES = [
   "Politics", "Economy", "Social", "Business", "Education", 
-  "Culture", "Technology", "Sports", "World", "Health", "Entertainment"
+  "Culture", "Technology", "Sports", "World", "Health", "Entertainment", "Science", "General"
 ] as const;
 
 export const LANGUAGES = ["en", "ar"] as const;
