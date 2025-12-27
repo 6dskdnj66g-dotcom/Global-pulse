@@ -39,18 +39,13 @@ export class DatabaseStorage implements IStorage {
 
   async bulkCreateArticles(articlesList: InsertArticle[]): Promise<void> {
     if (articlesList.length === 0) return;
-    // Use onConflictDoNothing based on URL to avoid duplicates
-    // Note: Drizzle's onConflictDoNothing requires a unique constraint target. 
-    // We haven't defined one on URL yet, but usually we should.
-    // For now, let's just insert one by one or use a simple check.
-    // Better: Add unique index on URL in schema, but schema is already written.
-    // We'll just check existence efficiently or ignore errors.
-    
-    for (const article of articlesList) {
-      const existing = await db.select().from(articles).where(eq(articles.url, article.url)).limit(1);
-      if (existing.length === 0) {
-        await db.insert(articles).values(article);
-      }
+    try {
+      // Use onConflictDoUpdate or Ignore now that we have unique constraint
+      await db.insert(articles)
+        .values(articlesList)
+        .onConflictDoNothing({ target: articles.url });
+    } catch (error) {
+      console.error("Bulk insert error:", error);
     }
   }
 }

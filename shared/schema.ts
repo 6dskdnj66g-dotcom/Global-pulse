@@ -7,13 +7,13 @@ export const articles = pgTable("articles", {
   title: text("title").notNull(),
   summary: text("summary").notNull(),
   content: text("content"),
-  url: text("url").notNull(),
+  url: text("url").notNull().unique(), // Unique constraint for deduplication
   imageUrl: text("image_url"),
   source: text("source").notNull(),
   category: text("category").notNull(),
-  language: text("language").notNull().default('en'), // 'en' or 'ar'
+  language: text("language").notNull().default('en'),
   publishedAt: timestamp("published_at").notNull(),
-  location: jsonb("location"), // { lat: number, lng: number, label: string } for the globe
+  location: jsonb("location"),
 });
 
 export const insertArticleSchema = createInsertSchema(articles).omit({ id: true });

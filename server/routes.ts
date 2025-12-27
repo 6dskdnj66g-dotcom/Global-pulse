@@ -3,9 +3,8 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import { z } from "zod";
-import Parser from "rss-parser";
 
-const parser = new Parser();
+const NEWS_API_BASE = "https://newsapi.org/v2";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -14,7 +13,6 @@ export async function registerRoutes(
 
   app.get(api.articles.list.path, async (req, res) => {
     try {
-      // Use z.coerce for query params usually, or just manual parsing since they are strings
       const category = req.query.category as string | undefined;
       const language = req.query.language as string | undefined;
       const search = req.query.search as string | undefined;
@@ -37,72 +35,86 @@ export async function registerRoutes(
 
   app.post(api.articles.sync.path, async (req, res) => {
     try {
-      await seedDatabase();
-      res.json({ count: 1 }); // Just a success signal
+      await syncAllNews();
+      res.json({ success: true });
     } catch (error) {
       console.error("Sync error:", error);
       res.status(500).json({ message: "Sync failed" });
     }
   });
 
-  // Seed on startup
-  seedDatabase().catch(console.error);
+  // Initial sync on startup
+  syncAllNews().catch(console.error);
 
   return httpServer;
 }
 
-// Simple mapping of RSS feeds to Categories
-const FEEDS = [
-  { url: 'http://feeds.bbci.co.uk/news/world/rss.xml', source: 'BBC News', category: 'World', lang: 'en' },
-  { url: 'http://feeds.bbci.co.uk/news/technology/rss.xml', source: 'BBC News', category: 'Technology', lang: 'en' },
-  { url: 'http://feeds.bbci.co.uk/news/business/rss.xml', source: 'BBC News', category: 'Business', lang: 'en' },
-  { url: 'https://www.aljazeera.com/xml/rss/all.xml', source: 'Al Jazeera', category: 'World', lang: 'en' },
-  { url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', source: 'NYT', category: 'World', lang: 'en' },
-  // Arabic feeds (some might be tricky with encoding, but rss-parser handles most)
-  { url: 'https://www.aljazeera.net/aljazeerarss/a7c186be-1adb-4580-8232-06dc947dd866', source: 'Al Jazeera Arabic', category: 'World', lang: 'ar' },
-];
+const CATEGORY_MAP: Record<string, string> = {
+  "Politics": "politics",
+  "Economy": "business",
+  "Social": "general",
+  "Business": "business",
+  "Education": "science",
+  "Culture": "entertainment",
+  "Technology": "technology",
+  "Sports": "sports",
+  "World": "general",
+  "Health": "health",
+  "Entertainment": "entertainment"
+};
 
-async function seedDatabase() {
-  console.log("Seeding database with RSS feeds...");
+async function syncAllNews() {
+  const apiKey = process.env.NEWS_API_KEY;
+  if (!apiKey) {
+    console.error("NEWS_API_KEY not found");
+    return;
+  }
+
+  console.log("Syncing real-time news from NewsAPI...");
   
-  for (const feed of FEEDS) {
-    try {
-      const feedResult = await parser.parseURL(feed.url);
-      
-      const articles = feedResult.items.map(item => {
-        // Simple heuristic for image: check content:encoded or enclosure
-        let imageUrl = null;
-        if (item.enclosure && item.enclosure.url && item.enclosure.type?.startsWith('image')) {
-          imageUrl = item.enclosure.url;
-        } else if (item['media:content'] && item['media:content']['$'] && item['media:content']['$'].url) {
-           imageUrl = item['media:content']['$'].url;
+  const langs = ["en", "ar"];
+  const newsCategories = ["Politics", "Business", "Technology", "Sports", "Health", "Entertainment", "World"];
+
+  for (const lang of langs) {
+    for (const cat of newsCategories) {
+      try {
+        const query = lang === 'ar' ? 'أخبار' : 'news';
+        const newsApiCategory = CATEGORY_MAP[cat] || 'general';
+        
+        // NewsAPI top-headlines or everything
+        const response = await fetch(
+          `${NEWS_API_BASE}/top-headlines?category=${newsApiCategory}&language=${lang}&apiKey=${apiKey}&pageSize=20`
+        );
+        
+        const data = await response.json();
+        
+        if (data.status === 'ok' && data.articles) {
+          const articlesToInsert = data.articles
+            .filter((a: any) => a.title && a.url && a.title !== '[Removed]')
+            .map((a: any) => ({
+              title: a.title,
+              summary: a.description || a.content || '',
+              content: a.content || '',
+              url: a.url,
+              imageUrl: a.urlToImage,
+              source: a.source?.name || 'Unknown',
+              category: cat,
+              language: lang,
+              publishedAt: a.publishedAt ? new Date(a.publishedAt) : new Date(),
+              location: generateRandomLocation(),
+            }));
+
+          await storage.bulkCreateArticles(articlesToInsert);
+          console.log(`Synced ${articlesToInsert.length} ${lang} articles for ${cat}`);
         }
-
-        return {
-          title: item.title || 'Untitled',
-          summary: item.contentSnippet || item.content || '',
-          content: item.content || '',
-          url: item.link || '',
-          imageUrl: imageUrl,
-          source: feed.source,
-          category: feed.category,
-          language: feed.lang,
-          publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
-          location: generateRandomLocation(), // Mock location for the globe
-        };
-      });
-
-      await storage.bulkCreateArticles(articles);
-      console.log(`Imported ${articles.length} articles from ${feed.source} (${feed.category})`);
-    } catch (error) {
-      console.error(`Failed to parse feed ${feed.url}:`, error);
+      } catch (err) {
+        console.error(`Error syncing ${lang} ${cat}:`, err);
+      }
     }
   }
 }
 
 function generateRandomLocation() {
-  // Generate random lat/lng mostly on land masses roughly
-  // This is just for visual effect on the globe
   const lat = (Math.random() * 160) - 80;
   const lng = (Math.random() * 360) - 180;
   return { lat, lng, label: "News Location" };
