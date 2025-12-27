@@ -35,6 +35,9 @@ export default function Home() {
     limit: 50
   });
 
+  const featuredArticle = articles?.[0];
+  const gridArticles = articles?.slice(1);
+
   // Re-fetch when language, category or search changes
   useEffect(() => {
     refetch();
