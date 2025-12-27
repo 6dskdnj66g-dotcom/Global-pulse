@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { Header } from "@/components/Header";
 import { ArticleCard } from "@/components/ArticleCard";
 import { GlobeViz } from "@/components/GlobeViz";
