@@ -15,8 +15,16 @@ export default function Home() {
   const { language, t, dir } = useLanguage();
   const syncMutation = useSyncArticles();
 
-  const handleSync = () => {
-    syncMutation.mutate();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 60000); // 60 seconds
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  const handleSync = async () => {
+    await syncMutation.mutateAsync();
+    refetch();
   };
   
   // Parse Query Params

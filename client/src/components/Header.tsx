@@ -17,6 +17,12 @@ export function Header() {
   const { language, toggleLanguage, t, dir } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,7 +40,10 @@ export function Header() {
       <div className="w-full bg-primary/5 border-b border-border/20 py-1 hidden sm:block">
         <div className="container mx-auto px-4 flex justify-between items-center text-xs font-medium text-muted-foreground">
           <div className="flex items-center gap-4">
-            <span>{new Date().toLocaleDateString(language === 'en' ? 'en-US' : 'ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span>{now.toLocaleDateString(language === 'en' ? 'en-US' : 'ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span className="text-primary font-bold ml-2">
+              {language === 'en' ? 'Updated just now' : 'تم التحديث الآن'}
+            </span>
             <span className="w-px h-3 bg-border" />
             <span className="flex items-center gap-1 text-primary">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />

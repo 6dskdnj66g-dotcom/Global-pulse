@@ -16,13 +16,13 @@ const parser = new Parser({
 });
 
 const FEEDS = [
-  { url: 'https://www.aljazeera.net/aljazeerarss/feed', lang: 'ar', source: 'Al Jazeera Arabic' },
   { url: 'https://www.aljazeera.com/xml/rss/all.xml', lang: 'en', source: 'Al Jazeera English' },
+  { url: 'https://feeds.bbci.co.uk/news/rss.xml', lang: 'en', source: 'BBC News' },
+  { url: 'https://www.theguardian.com/rss', lang: 'en', source: 'The Guardian' },
+  { url: 'https://news.sky.com/feeds/rss/world', lang: 'en', source: 'Sky News' },
+  { url: 'http://rss.cnn.com/rss/edition.rss', lang: 'en', source: 'CNN' },
+  { url: 'https://www.aljazeera.net/aljazeerarss/feed', lang: 'ar', source: 'Al Jazeera Arabic' },
   { url: 'https://feeds.bbci.co.uk/arabic/world/rss.xml', lang: 'ar', source: 'BBC Arabic' },
-  { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', lang: 'en', source: 'BBC World' },
-  { url: 'http://rss.cnn.com/rss/cnn_world.rss', lang: 'en', source: 'CNN World' },
-  { url: 'https://www.skynewsarabia.com/rss.xml', lang: 'ar', source: 'Sky News Arabia' },
-  { url: 'https://www.reutersagency.com/feed/?best-topics=world&post_type=best', lang: 'en', source: 'Reuters World' },
 ];
 
 export async function registerRoutes(
@@ -37,8 +37,7 @@ export async function registerRoutes(
       const search = req.query.search as string | undefined;
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 
-      // Always ensure we have fresh data on a fresh load/refresh if possible
-      // In a real production app, we might check cache age here
+      // Filter for last 24 hours by default if requested
       const articles = await storage.getArticles({ category, language, search, limit });
       res.json(articles);
     } catch (error) {
@@ -57,7 +56,7 @@ export async function registerRoutes(
   app.post(api.articles.sync.path, async (req, res) => {
     try {
       await syncAllNews();
-      res.json({ success: true });
+      res.json({ success: true, updated: new Date().toISOString() });
     } catch (error) {
       console.error("Sync error:", error);
       res.status(500).json({ message: "Sync failed" });
@@ -66,6 +65,11 @@ export async function registerRoutes(
 
   // Initial sync on startup
   syncAllNews().catch(console.error);
+
+  // Auto-sync every 5 minutes
+  setInterval(() => {
+    syncAllNews().catch(console.error);
+  }, 5 * 60 * 1000);
 
   return httpServer;
 }
@@ -90,11 +94,18 @@ async function syncAllNews() {
   console.log("Syncing real-time news from RSS feeds...");
   
   const allArticles: any[] = [];
+  const now = new Date();
+  const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
   await Promise.all(FEEDS.map(async (feed) => {
     try {
       const parsedFeed = await parser.parseURL(feed.url);
       const items = parsedFeed.items.map(item => {
+        const pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
+        
+        // Skip articles older than 24 hours
+        if (pubDate < twentyFourHoursAgo) return null;
+
         let imageUrl = null;
         if (item.mediaContent?.[0]?.$.url) {
           imageUrl = item.mediaContent[0].$.url;
@@ -115,23 +126,22 @@ async function syncAllNews() {
           source: feed.source,
           category: categorizeArticle(item.title || "", content),
           language: feed.lang,
-          publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
+          publishedAt: pubDate,
           location: generateRandomLocation(),
         };
-      });
-      allArticles.push(...items.filter(a => a.url));
+      }).filter(a => a !== null);
+      allArticles.push(...items.filter(a => a?.url));
     } catch (err) {
       console.error(`Error syncing feed ${feed.url}:`, err);
     }
   }));
 
-  // Sort by date descending and take latest
+  // Sort by date descending
   allArticles.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
   
-  // Deduplicate and insert
   if (allArticles.length > 0) {
     await storage.bulkCreateArticles(allArticles);
-    console.log(`Synced ${allArticles.length} articles from RSS feeds`);
+    console.log(`Synced ${allArticles.length} fresh articles from RSS feeds`);
   }
 }
 
