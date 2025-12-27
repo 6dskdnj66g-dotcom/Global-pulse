@@ -94,7 +94,11 @@ export function Header() {
             <DropdownMenuContent>
               {CATEGORIES.slice(5).map((category) => (
                 <DropdownMenuItem key={category} asChild>
-                  <Link href={`/?category=${category}`} className="w-full cursor-pointer">
+                  <Link 
+                    href={`/?category=${category}`} 
+                    className="w-full cursor-pointer"
+                    onClick={() => setLocation(`/?category=${category}`)}
+                  >
                     {t(`nav.${category.toLowerCase()}`)}
                   </Link>
                 </DropdownMenuItem>

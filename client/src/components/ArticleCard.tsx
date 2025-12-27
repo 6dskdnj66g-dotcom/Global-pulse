@@ -55,10 +55,17 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
       className={`
         relative group rounded-xl overflow-hidden bg-card border border-border/40
         transition-all duration-500 hover:shadow-2xl hover:border-primary/20
+        active:scale-[0.98]
         ${featured ? 'col-span-1 md:col-span-2 row-span-2 min-h-[400px]' : 'min-h-[320px]'}
       `}
     >
-      <Link href={`/article/${article.id}`} className="block h-full w-full">
+      <a 
+        href={article.url} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="block h-full w-full"
+        data-testid={`link-article-${article.id}`}
+      >
         {/* Image Background for Featured, Top for Standard */}
         <div className={`
           ${featured ? 'absolute inset-0 z-0' : 'h-48 w-full relative'}
@@ -78,7 +85,6 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
           )}
         </div>
 
-        {/* Content */}
         <div className={`
           relative z-10 flex flex-col justify-between h-full
           ${featured ? 'p-8 text-white' : 'p-5'}
@@ -131,7 +137,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
             </span>
           </div>
         </div>
-      </Link>
+      </a>
     </motion.div>
   );
 }
