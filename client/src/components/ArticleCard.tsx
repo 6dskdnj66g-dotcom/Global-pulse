@@ -106,7 +106,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
             </h3>
             
             <p className={`
-              font-sans leading-relaxed line-clamp-3
+              font-sans leading-relaxed line-clamp-6
               ${featured ? 'text-lg text-gray-200 max-w-2xl' : 'text-sm text-muted-foreground'}
             `}>
               {article.summary}
@@ -114,21 +114,33 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
           </div>
 
           {/* Footer */}
-          <div className="mt-6 flex items-center justify-between pt-4 border-t border-border/10">
-            <div className="flex items-center gap-2 text-xs font-medium opacity-70">
-              <Globe className="w-3 h-3" />
-              {article.source}
+          <div className="mt-6 flex flex-col gap-4 pt-4 border-t border-border/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-medium opacity-70">
+                <Globe className="w-3 h-3" />
+                {article.source}
+              </div>
+              
+              <span className={`
+                flex items-center gap-2 text-sm font-bold
+                ${featured ? 'text-white' : 'text-primary'}
+                group-hover:translate-x-1 transition-transform
+                ${dir === 'rtl' ? 'flex-row-reverse' : ''}
+              `}>
+                {t('read.more')}
+                <ArrowRight className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
+              </span>
             </div>
             
-            <span className={`
-              flex items-center gap-2 text-sm font-bold
-              ${featured ? 'text-white' : 'text-primary'}
-              group-hover:translate-x-1 transition-transform
-              ${dir === 'rtl' ? 'flex-row-reverse' : ''}
-            `}>
-              {t('read.more')}
-              <ArrowRight className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
-            </span>
+            <a 
+              href={article.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="w-full py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-center text-xs font-bold transition-colors"
+            >
+              {dir === 'rtl' ? 'اقرأ المقال الكامل' : 'Read full article'}
+            </a>
           </div>
         </div>
       </Link>

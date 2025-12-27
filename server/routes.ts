@@ -16,12 +16,13 @@ const parser = new Parser({
 });
 
 const FEEDS = [
-  { url: 'https://www.aljazeera.com/xml/rss/all.xml', lang: 'en', source: 'Al Jazeera English' },
   { url: 'https://www.aljazeera.net/aljazeerarss/feed', lang: 'ar', source: 'Al Jazeera Arabic' },
-  { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', lang: 'en', source: 'BBC World News' },
+  { url: 'https://www.aljazeera.com/xml/rss/all.xml', lang: 'en', source: 'Al Jazeera English' },
   { url: 'https://feeds.bbci.co.uk/arabic/world/rss.xml', lang: 'ar', source: 'BBC Arabic' },
-  { url: 'http://rss.cnn.com/rss/cnn_world.rss', lang: 'en', source: 'CNN World News' },
-  { url: 'https://www.reutersagency.com/feed/?best-topics=world&post_type=best', lang: 'en', source: 'Reuters World News' },
+  { url: 'https://feeds.bbci.co.uk/news/world/rss.xml', lang: 'en', source: 'BBC World' },
+  { url: 'http://rss.cnn.com/rss/cnn_world.rss', lang: 'en', source: 'CNN World' },
+  { url: 'https://www.skynewsarabia.com/rss.xml', lang: 'ar', source: 'Sky News Arabia' },
+  { url: 'https://www.reutersagency.com/feed/?best-topics=world&post_type=best', lang: 'en', source: 'Reuters World' },
 ];
 
 export async function registerRoutes(
@@ -36,6 +37,8 @@ export async function registerRoutes(
       const search = req.query.search as string | undefined;
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 
+      // Always ensure we have fresh data on a fresh load/refresh if possible
+      // In a real production app, we might check cache age here
       const articles = await storage.getArticles({ category, language, search, limit });
       res.json(articles);
     } catch (error) {
