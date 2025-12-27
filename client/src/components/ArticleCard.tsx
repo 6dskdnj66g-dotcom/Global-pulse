@@ -59,13 +59,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
         ${featured ? 'col-span-1 md:col-span-2 row-span-2 min-h-[400px]' : 'min-h-[320px]'}
       `}
     >
-      <a 
-        href={article.url} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="block h-full w-full"
-        data-testid={`link-article-${article.id}`}
-      >
+      <Link href={`/article/${article.id}`} className="block h-full w-full">
         {/* Image Background for Featured, Top for Standard */}
         <div className={`
           ${featured ? 'absolute inset-0 z-0' : 'h-48 w-full relative'}
@@ -137,7 +131,7 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
             </span>
           </div>
         </div>
-      </a>
+      </Link>
     </motion.div>
   );
 }

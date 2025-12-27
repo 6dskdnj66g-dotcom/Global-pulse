@@ -85,7 +85,7 @@ export default function Home() {
         <section className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-serif text-3xl md:text-4xl font-bold">
-              {category ? t(`nav.${category.toLowerCase()}`) : search ? `Search: ${search}` : t('latest.news')}
+              {category ? t(`nav.${category.toLowerCase()}`) : search ? (language === 'en' ? `Search Results: ${search}` : `نتائج البحث: ${search}`) : t('latest.news')}
             </h2>
             <div className="flex items-center gap-2">
               {syncMutation.isPending && (

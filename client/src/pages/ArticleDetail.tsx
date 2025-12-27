@@ -87,8 +87,18 @@ export default function ArticleDetail() {
               {/* Meta Header */}
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-8 border-b border-border/40 text-sm text-muted-foreground">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                    {article.source.substring(0, 2).toUpperCase()}
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold overflow-hidden">
+                    {article.source.toLowerCase().includes('al jazeera') ? (
+                      <img src="https://www.aljazeera.com/favicon.ico" alt="" className="w-6 h-6 object-contain" />
+                    ) : article.source.toLowerCase().includes('bbc') ? (
+                      <img src="https://www.bbc.com/favicon.ico" alt="" className="w-6 h-6 object-contain" />
+                    ) : article.source.toLowerCase().includes('cnn') ? (
+                      <img src="https://edition.cnn.com/favicon.ico" alt="" className="w-6 h-6 object-contain" />
+                    ) : article.source.toLowerCase().includes('reuters') ? (
+                      <img src="https://www.reuters.com/favicon.ico" alt="" className="w-6 h-6 object-contain" />
+                    ) : (
+                      article.source.substring(0, 2).toUpperCase()
+                    )}
                   </div>
                   <div>
                     <p className="font-bold text-foreground">{article.source}</p>
@@ -111,20 +121,28 @@ export default function ArticleDetail() {
               </p>
 
               {/* Full Content */}
-              <div className="prose prose-lg dark:prose-invert max-w-none font-sans leading-loose text-foreground/80">
+              <div className="prose prose-lg dark:prose-invert max-w-none font-sans leading-loose text-foreground/80 mb-12">
                 {article.content ? (
                   article.content.split('\n').map((paragraph, idx) => (
                     <p key={idx} className="mb-6">{paragraph}</p>
                   ))
                 ) : (
-                  <p className="text-muted-foreground italic">[Full content not available in preview mode]</p>
+                  <p className="text-muted-foreground italic">{dir === 'rtl' ? '[محتوى المقال الكامل غير متوفر في وضع المعاينة]' : '[Full content not available in preview mode]'}</p>
                 )}
               </div>
               
-              <div className="mt-12 p-6 bg-muted/30 rounded-xl border border-border flex items-center justify-between">
-                 <span className="text-sm font-medium">Read original article at {article.source}</span>
-                 <a href={article.url} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-foreground text-background rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
-                   Visit Source
+              <div className="mt-12 p-6 bg-muted/30 rounded-xl border border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+                 <div className="flex flex-col">
+                   <span className="text-sm font-medium">{dir === 'rtl' ? 'اقرأ المقال الأصلي في' : 'Read original article at'} {article.source}</span>
+                   <span className="text-xs text-muted-foreground truncate max-w-[200px] sm:max-w-xs">{article.url}</span>
+                 </div>
+                 <a 
+                   href={article.url} 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   className="w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground rounded-lg font-bold text-sm hover:opacity-90 transition-opacity text-center flex items-center justify-center gap-2"
+                 >
+                   {dir === 'rtl' ? 'اقرأ المقال الكامل في المصدر' : 'Read full original article'}
                  </a>
               </div>
             </div>
