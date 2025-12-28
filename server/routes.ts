@@ -3,6 +3,11 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { api } from "@shared/routes";
 import Parser from "rss-parser";
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || "dummy",
+});
 
 const parser = new Parser({
   customFields: {
@@ -40,11 +45,36 @@ export async function registerRoutes(
       const search = req.query.search as string | undefined;
       const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
 
-      // Filter for last 24 hours by default if requested
       const articles = await storage.getArticles({ category, language, search, limit });
       res.json(articles);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch articles" });
+    }
+  });
+
+  app.post("/api/ai/chat", async (req, res) => {
+    try {
+      const { message, language } = req.body;
+      const recentArticles = await storage.getArticles({ limit: 10, language });
+      
+      const context = recentArticles.map(a => `- ${a.title}: ${a.summary}`).join("\n");
+      
+      const systemPrompt = language === 'ar' 
+        ? `أنت مساعد أخبار ذكي لمنصة Global Pulse. استخدم السياق التالي للإجابة على أسئلة المستخدم حول الأخبار الحالية باللغة العربية. كن محترفاً ومختصراً.\n\nالسياق:\n${context}`
+        : `You are a smart news assistant for Global Pulse. Use the following context to answer user questions about current news in English. Be professional and concise.\n\nContext:\n${context}`;
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: message }
+        ],
+      });
+
+      res.json({ response: response.choices[0].message.content });
+    } catch (error) {
+      console.error("AI Error:", error);
+      res.status(500).json({ message: "AI assistant failed" });
     }
   });
 
