@@ -15,18 +15,6 @@ export default function Home() {
   const { language, t, dir } = useLanguage();
   const syncMutation = useSyncArticles();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      refetch();
-    }, 60000); // 60 seconds
-    return () => clearInterval(interval);
-  }, [refetch]);
-
-  const handleSync = async () => {
-    await syncMutation.mutateAsync();
-    refetch();
-  };
-  
   // Parse Query Params
   const searchParams = new URLSearchParams(window.location.search);
   const categoryParam = searchParams.get("category") || undefined;
@@ -42,6 +30,18 @@ export default function Home() {
     language,
     limit: 50
   });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 60000); // 60 seconds
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  const handleSync = async () => {
+    await syncMutation.mutateAsync();
+    refetch();
+  };
 
   const featuredArticle = articles?.[0];
   const gridArticles = articles?.slice(1);

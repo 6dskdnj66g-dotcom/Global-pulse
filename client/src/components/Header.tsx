@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/use-theme";
 import { useLanguage } from "@/hooks/use-language";
 import { Moon, Sun, Search, Menu, X, Globe } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CATEGORIES } from "@shared/schema";
 import {
   DropdownMenu,
