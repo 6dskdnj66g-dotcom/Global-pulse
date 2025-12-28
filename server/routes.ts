@@ -21,8 +21,11 @@ const FEEDS = [
   { url: 'https://www.theguardian.com/rss', lang: 'en', source: 'The Guardian' },
   { url: 'https://news.sky.com/feeds/rss/world', lang: 'en', source: 'Sky News' },
   { url: 'http://rss.cnn.com/rss/edition.rss', lang: 'en', source: 'CNN' },
+  { url: 'https://www.axios.com/feeds/feed.rss', lang: 'en', source: 'Axios' },
+  { url: 'https://www.reuters.com/arc/outboundfeeds/news-handler/?outputType=xml', lang: 'en', source: 'Reuters' },
   { url: 'https://www.aljazeera.net/aljazeerarss/feed', lang: 'ar', source: 'Al Jazeera Arabic' },
   { url: 'https://feeds.bbci.co.uk/arabic/world/rss.xml', lang: 'ar', source: 'BBC Arabic' },
+  { url: 'https://www.skynewsarabia.com/rss/v1/global.xml', lang: 'ar', source: 'Sky News Arabia' },
 ];
 
 export async function registerRoutes(
