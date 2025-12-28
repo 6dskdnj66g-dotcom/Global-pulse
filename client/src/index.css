@@ -5,7 +5,42 @@
 @tailwind utilities;
 
 :root {
-  /* Elegant News Palette - Ultra High Contrast (Washington Post Editorial Style) */
+  /* High Contrast Dark Palette (Default) */
+  --background: 0 0% 5%;
+  --foreground: 0 0% 100%;
+  
+  --card: 0 0% 8%;
+  --card-foreground: 0 0% 100%;
+  
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 100%;
+  
+  --primary: 0 100% 40%; /* Vibrant News Red */
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 100%;
+  
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 70%;
+  
+  --accent: 0 0% 18%;
+  --accent-foreground: 0 0% 100%;
+  
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 0 100% 40%;
+ 
+  --radius: 0rem;
+
+  --font-serif: 'Playfair Display', 'Amiri', serif;
+  --font-sans: 'DM Sans', 'Cairo', sans-serif;
+}
+
+.light {
   --background: 0 0% 100%;
   --foreground: 0 0% 0%;
   
@@ -15,14 +50,14 @@
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 0%;
   
-  --primary: 0 100% 25%; /* Sharper Red #800000 */
+  --primary: 0 100% 30%;
   --primary-foreground: 0 0% 100%;
   
   --secondary: 0 0% 98%;
   --secondary-foreground: 0 0% 0%;
   
   --muted: 0 0% 92%;
-  --muted-foreground: 0 0% 10%; /* Darker muted text for readability */
+  --muted-foreground: 0 0% 10%;
   
   --accent: 0 0% 90%;
   --accent-foreground: 0 0% 0%;
@@ -30,45 +65,9 @@
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
 
-  --border: 0 0% 70%; /* More visible borders */
+  --border: 0 0% 70%;
   --input: 0 0% 70%;
   --ring: 0 100% 25%;
- 
-  --radius: 0rem;
-
-  --font-serif: 'Playfair Display', 'Amiri', serif;
-  --font-sans: 'DM Sans', 'Cairo', sans-serif;
-}
-
-.dark {
-  /* Elegant News Palette - Dark */
-  --background: 0 0% 5%;
-  --foreground: 0 0% 98%;
-  
-  --card: 0 0% 9%;
-  --card-foreground: 0 0% 98%;
-  
-  --popover: 0 0% 9%;
-  --popover-foreground: 0 0% 98%;
-  
-  --primary: 0 100% 40%;
-  --primary-foreground: 0 0% 100%;
-  
-  --secondary: 0 0% 17.5%;
-  --secondary-foreground: 0 0% 98%;
-  
-  --muted: 0 0% 17.5%;
-  --muted-foreground: 0 0% 65.1%;
-  
-  --accent: 0 0% 17.5%;
-  --accent-foreground: 0 0% 98%;
-  
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  
-  --border: 0 0% 17.5%;
-  --input: 0 0% 17.5%;
-  --ring: 0 100% 40%;
 }
 
 @layer base {

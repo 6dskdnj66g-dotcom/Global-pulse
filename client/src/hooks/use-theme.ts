@@ -7,10 +7,9 @@ export function useTheme() {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme') as Theme;
       if (saved) return saved;
-      const isDark = document.documentElement.classList.contains('dark');
-      return isDark ? 'dark' : 'light';
+      return 'dark'; // Set dark as default
     }
-    return 'light';
+    return 'dark';
   });
 
   useEffect(() => {
