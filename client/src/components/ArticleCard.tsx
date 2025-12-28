@@ -1,9 +1,9 @@
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { formatDistanceToNow } from "date-fns";
+import { motion } from "framer-motion";
 import { Link } from "wouter";
+import { format } from "date-fns";
 import { Article } from "@shared/schema";
-import { ArrowRight, Clock, Globe } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
+import { Globe, ArrowRight, Share2, Bookmark } from "lucide-react";
 
 interface ArticleCardProps {
   article: Article;
@@ -11,138 +11,97 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ article, featured = false }: ArticleCardProps) {
-  const { dir, t } = useLanguage();
-  
-  // 3D Tilt Effect State
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  const { language, t, dir } = useLanguage();
 
-  const mouseX = useSpring(x);
-  const mouseY = useSpring(y);
-
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-10deg", "10deg"]);
-
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    
-    const mouseXFromCenter = e.clientX - rect.left - width / 2;
-    const mouseYFromCenter = e.clientY - rect.top - height / 2;
-    
-    x.set(mouseXFromCenter / width);
-    y.set(mouseYFromCenter / height);
-  }
-
-  function handleMouseLeave() {
-    x.set(0);
-    y.set(0);
-  }
-
-  // Fallback image if none provided
-  const bgImage = article.imageUrl || `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80&sig=${article.id}`;
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({
+        title: article.title,
+        text: article.summary,
+        url: article.url,
+      }).catch(() => {});
+    }
+  };
 
   return (
     <motion.div
-      style={{
-        rotateX: rotateX,
-        rotateY: rotateY,
-        transformStyle: "preserve-3d",
-      }}
-      whileHover={{ 
-        scale: 1.05, 
-        z: 50,
-        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)"
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      whileHover={{ y: -8, scale: 1.02 }}
       className={`
-        relative group rounded-xl overflow-hidden bg-card border border-border/40
-        transition-all duration-500 hover:border-primary/40
-        active:scale-[0.98]
-        ${featured ? 'col-span-1 md:col-span-2 row-span-2 min-h-[450px]' : 'min-h-[350px]'}
-        perspective-1000
+        group relative h-full flex flex-col overflow-hidden glass-card transition-all duration-300
+        ${featured ? 'md:flex-row shadow-2xl' : 'shadow-lg'}
+        hover:shadow-primary/20
       `}
     >
-      <Link href={`/article/${article.id}`} className="block h-full w-full">
-        {/* Image Background for Featured, Top for Standard */}
-        <div className={`
-          ${featured ? 'absolute inset-0 z-0' : 'h-48 w-full relative'}
-          overflow-hidden
-        `}>
+      <Link href={`/article/${article.id}`} className="flex flex-col h-full w-full">
+        {/* Image */}
+        <div className={`relative overflow-hidden ${featured ? 'md:w-1/2 h-[300px] md:h-full' : 'h-48'}`}>
           <img 
-            src={bgImage} 
+            loading="lazy"
+            src={article.imageUrl || 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&q=80'} 
             alt={article.title}
-            className={`
-              w-full h-full object-cover transition-transform duration-700 ease-out
-              group-hover:scale-105
-              ${featured ? 'opacity-40 group-hover:opacity-30 dark:opacity-30' : ''}
-            `}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          {featured && (
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
-          )}
-        </div>
-
-        <div className={`
-          relative z-10 flex flex-col justify-between h-full
-          ${featured ? 'p-8 text-white' : 'p-5'}
-        `}>
-          {/* Metadata */}
-          <div className="flex items-center gap-3 text-xs font-semibold tracking-wider uppercase opacity-80 mb-3">
-            <span className={`
-              px-2 py-1 rounded bg-primary text-white
-              ${featured ? 'bg-primary' : 'bg-primary/90'}
-            `}>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+          
+          <div className="absolute top-4 left-4 flex gap-2">
+            <span className="px-3 py-1 bg-primary text-white text-[10px] font-black uppercase tracking-widest shadow-lg">
               {article.category}
             </span>
+          </div>
+
+          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button 
+              onClick={handleShare}
+              className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors"
+            >
+              <Bookmark className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className={`p-6 flex flex-col flex-1 ${featured ? 'md:w-1/2 bg-white/5' : ''}`}>
+          <div className="mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
             <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {formatDistanceToNow(new Date(article.publishedAt))} ago
+              <Globe className="w-3 h-3 text-primary" />
+              {article.source}
+            </span>
+            <span>
+              {format(new Date(article.publishedAt), 'MMM dd, yyyy')}
             </span>
           </div>
 
-          <div className="flex-1" style={{ transform: "translateZ(30px)" }}>
-            <h3 className={`
-              font-serif font-bold leading-tight mb-3
-              ${featured ? 'text-3xl md:text-4xl lg:text-5xl text-white drop-shadow-md' : 'text-xl text-card-foreground group-hover:text-primary transition-colors'}
-            `}>
-              {article.title}
-            </h3>
-            
-            <p className={`
-              font-sans leading-relaxed line-clamp-6
-              ${featured ? 'text-lg text-gray-200 max-w-2xl drop-shadow-sm' : 'text-sm text-muted-foreground'}
-            `}>
-              {article.summary}
-            </p>
-          </div>
+          <h3 className={`
+            font-serif font-black leading-tight mb-3 group-hover:text-primary transition-colors
+            ${featured ? 'text-2xl md:text-4xl' : 'text-xl'}
+          `}>
+            {article.title}
+          </h3>
 
-          {/* Footer */}
-          <div className="mt-6 flex flex-col gap-4 pt-4 border-t border-border/10" style={{ transform: "translateZ(20px)" }}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-medium opacity-70">
-                <Globe className="w-3 h-3" />
-                {article.source}
-              </div>
-              
-              <span className={`
-                flex items-center gap-2 text-sm font-bold
-                ${featured ? 'text-white' : 'text-primary'}
-                group-hover:translate-x-1 transition-transform
-                ${dir === 'rtl' ? 'flex-row-reverse' : ''}
-              `}>
-                {t('read.more')}
-                <ArrowRight className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
-              </span>
-            </div>
-            
-            <div 
-              className="w-full py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-center text-xs font-bold transition-colors cursor-pointer"
-            >
-              {dir === 'rtl' ? 'اقرأ المقال الكامل' : 'Read full article'}
-            </div>
+          <p className={`
+            text-muted-foreground line-clamp-3 font-serif italic
+            ${featured ? 'text-base md:text-lg mb-6' : 'text-sm mb-4'}
+          `}>
+            {article.summary}
+          </p>
+
+          <div className="mt-auto pt-4 border-t border-border/10 flex items-center justify-between">
+            <span className={`
+              flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary
+              group-hover:translate-x-1 transition-transform
+              ${dir === 'rtl' ? 'flex-row-reverse' : ''}
+            `}>
+              {t('read.more')}
+              <ArrowRight className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
+            </span>
           </div>
         </div>
       </Link>

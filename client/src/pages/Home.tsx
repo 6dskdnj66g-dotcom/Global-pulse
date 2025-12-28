@@ -178,35 +178,42 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 bg-muted/30 py-12 mt-auto">
+      <footer className="border-t-4 border-primary bg-black text-white py-16 mt-auto">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="col-span-1 md:col-span-2">
-              <h3 className="font-serif text-2xl font-bold mb-4">WORLD<span className="text-primary">NEWS</span></h3>
-              <p className="text-muted-foreground max-w-sm">
-                Your trusted source for global news coverage, bringing you the stories that matter from every corner of the world.
+              <h3 className="font-serif text-3xl font-black mb-6 tracking-tighter uppercase">GLOBAL<span className="text-primary">PULSE</span></h3>
+              <p className="text-gray-400 max-w-sm font-serif leading-relaxed italic">
+                {language === 'en' 
+                  ? "Democratic perspective on world events. Your trusted source for global news coverage, bringing you the stories that matter."
+                  : "منظور ديمقراطي للأحداث العالمية. مصدرك الموثوق لتغطية الأخبار العالمية، نقدم لك القصص التي تهمك."}
               </p>
             </div>
             <div>
-              <h4 className="font-bold mb-4 uppercase text-xs tracking-wider">Categories</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h4 className="font-serif font-bold mb-6 uppercase text-sm tracking-[0.2em] text-primary">Sections</h4>
+              <ul className="space-y-3 text-sm text-gray-400 font-bold uppercase tracking-wider">
                 {CATEGORIES.slice(0, 6).map(c => (
-                  <li key={c}><Link href={`/?category=${c}`} className="hover:text-primary">{c}</Link></li>
+                  <li key={c}><Link href={`/?category=${c}`} className="hover:text-primary transition-colors">{c}</Link></li>
                 ))}
               </ul>
             </div>
             <div>
-              <h4 className="font-bold mb-4 uppercase text-xs tracking-wider">Connect</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary">About Us</a></li>
-                <li><a href="#" className="hover:text-primary">Contact</a></li>
-                <li><a href="#" className="hover:text-primary">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-primary">Terms of Service</a></li>
+              <h4 className="font-serif font-bold mb-6 uppercase text-sm tracking-[0.2em] text-primary">Connect</h4>
+              <ul className="space-y-3 text-sm text-gray-400 font-bold uppercase tracking-wider">
+                <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Privacy</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">Terms</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-border/20 text-center text-xs text-muted-foreground">
-            © {new Date().getFullYear()} WorldNews Portal. All rights reserved.
+          <div className="mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-xs text-gray-500 font-bold tracking-widest uppercase">
+              © {new Date().getFullYear()} GLOBALPULSE. All rights reserved.
+            </div>
+            <div className="text-red-600 font-serif font-black text-sm tracking-tighter">
+              Developed by Hassanein Salah
+            </div>
           </div>
         </div>
       </footer>
