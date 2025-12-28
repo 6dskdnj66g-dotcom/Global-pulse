@@ -78,6 +78,7 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
+    scroll-behavior: smooth;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
@@ -94,8 +95,21 @@
   perspective: 1000px;
 }
 
+.perspective-2000 {
+  perspective: 2000px;
+}
+
 .backface-hidden {
   backface-visibility: hidden;
+}
+
+/* Glassmorphism effects */
+.glass-panel {
+  @apply bg-background/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+}
+
+.glass-card {
+  @apply bg-card/40 backdrop-blur-md border border-border/20;
 }
 
 /* Custom Scrollbar for a cleaner look */

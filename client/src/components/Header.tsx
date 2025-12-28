@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Link, useLocation } from "wouter";
 import { useTheme } from "@/hooks/use-theme";
 import { useLanguage } from "@/hooks/use-language";
@@ -35,9 +36,14 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+    <motion.header 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      className="sticky top-0 z-50 w-full glass-panel"
+    >
       {/* Top Bar - Date & Utility */}
-      <div className="w-full bg-primary/5 border-b border-border/20 py-1 hidden sm:block">
+      <div className="w-full bg-primary/5 border-b border-border/10 py-1 hidden sm:block">
         <div className="container mx-auto px-4 flex justify-between items-center text-xs font-medium text-muted-foreground">
           <div className="flex items-center gap-4">
             <span>{now.toLocaleDateString(language === 'en' ? 'en-US' : 'ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
@@ -72,13 +78,18 @@ export function Header() {
         </button>
 
         {/* Logo */}
-        <Link href="/" className="flex flex-col items-center lg:items-start group">
-          <h1 className="font-serif text-3xl font-black tracking-tighter leading-none group-hover:text-primary transition-colors">
-            WORLD<span className="text-primary">NEWS</span>
-          </h1>
-          <span className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground font-sans hidden lg:block">
-            Global Perspective
-          </span>
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300 shadow-lg shadow-primary/20">
+            <Globe className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex flex-col">
+            <h1 className="font-serif text-2xl font-black tracking-tighter leading-none group-hover:text-primary transition-colors">
+              GLOBAL<span className="text-primary">PULSE</span>
+            </h1>
+            <span className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground font-sans hidden lg:block">
+              {language === 'en' ? 'Global Perspective' : 'منظور عالمي'}
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Nav */}
@@ -86,20 +97,25 @@ export function Header() {
           {CATEGORIES.slice(0, 5).map((category) => {
             const isActive = location === `/?category=${category}` || (location === '/' && category === 'World' && !window.location.search);
             return (
-              <Link 
-                key={category} 
-                href={`/?category=${category}`}
-                className={`
-                  px-4 py-2 text-sm font-semibold hover:text-primary transition-colors rounded-full hover:bg-primary/5
-                  ${isActive ? 'text-primary bg-primary/5' : 'text-foreground/80'}
-                `}
-                onClick={() => {
-                  setLocation(`/?category=${category}`);
-                  setIsMenuOpen(false);
-                }}
+              <motion.div
+                key={category}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
               >
-                {t(`nav.${category.toLowerCase()}`)}
-              </Link>
+                <Link 
+                  href={`/?category=${category}`}
+                  className={`
+                    px-4 py-2 text-sm font-semibold hover:text-primary transition-colors rounded-full hover:bg-primary/5
+                    ${isActive ? 'text-primary bg-primary/10 shadow-sm' : 'text-foreground/80'}
+                  `}
+                  onClick={() => {
+                    setLocation(`/?category=${category}`);
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  {t(`nav.${category.toLowerCase()}`)}
+                </Link>
+              </motion.div>
             );
           })}
           
@@ -107,7 +123,7 @@ export function Header() {
             <DropdownMenuTrigger className="px-4 py-2 text-sm font-semibold hover:text-primary transition-colors outline-none flex items-center gap-1">
               {t('nav.more')}
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="glass-panel">
               {CATEGORIES.slice(5).map((category) => (
                 <DropdownMenuItem key={category} asChild>
                   <Link 
@@ -129,14 +145,19 @@ export function Header() {
         {/* Actions */}
         <div className="flex items-center gap-2">
           {isSearchOpen ? (
-            <form onSubmit={handleSearch} className="absolute inset-x-0 top-0 h-full bg-background z-50 flex items-center px-4 animate-in fade-in slide-in-from-top-2">
+            <motion.form 
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 300, opacity: 1 }}
+              onSubmit={handleSearch} 
+              className="absolute right-20 top-5 z-50 flex items-center px-4"
+            >
               <Search className="w-5 h-5 text-muted-foreground absolute left-6" />
               <input
                 autoFocus
                 name="q"
                 type="search"
                 placeholder={t('search.placeholder')}
-                className="w-full h-10 pl-10 pr-10 bg-muted/50 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20"
+                className="w-full h-10 pl-10 pr-10 bg-muted/80 backdrop-blur-sm rounded-full focus:outline-none focus:ring-2 focus:ring-primary/40 shadow-xl"
                 onBlur={() => !location.includes('search') && setIsSearchOpen(false)}
               />
               <button 
@@ -146,11 +167,11 @@ export function Header() {
               >
                 <X className="w-5 h-5" />
               </button>
-            </form>
+            </motion.form>
           ) : (
             <button 
               onClick={() => setIsSearchOpen(true)}
-              className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground transition-colors"
+              className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground transition-all hover:scale-110 active:scale-95"
             >
               <Search className="w-5 h-5" />
             </button>
@@ -158,7 +179,7 @@ export function Header() {
 
           <button 
             onClick={toggleTheme}
-            className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground transition-colors"
+            className="p-2 hover:bg-muted rounded-full text-muted-foreground hover:text-foreground transition-all hover:scale-110 active:scale-95"
             data-testid="button-theme-toggle"
           >
             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -176,21 +197,25 @@ export function Header() {
       
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden border-t border-border bg-background absolute w-full z-40 animate-in slide-in-from-top-5">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="lg:hidden border-t border-border/20 glass-panel absolute w-full z-40"
+        >
           <nav className="flex flex-col p-4 gap-2">
             {CATEGORIES.map((category) => (
               <Link 
                 key={category} 
                 href={`/?category=${category}`}
                 onClick={() => setIsMenuOpen(false)}
-                className="px-4 py-3 text-lg font-medium hover:bg-muted rounded-lg"
+                className="px-4 py-3 text-lg font-medium hover:bg-primary/5 rounded-lg transition-colors"
               >
                 {t(`nav.${category.toLowerCase()}`)}
               </Link>
             ))}
           </nav>
-        </div>
+        </motion.div>
       )}
-    </header>
+    </motion.header>
   );
 }

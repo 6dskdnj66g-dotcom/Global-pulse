@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import Globe, { type GlobeMethods } from 'react-globe.gl';
 import { useTheme } from '@/hooks/use-theme';
 import { useArticles } from '@/hooks/use-articles';
@@ -61,23 +62,36 @@ export function GlobeViz({ height = 500 }: GlobeVizProps) {
     globeImageUrl: "//unpkg.com/three-globe/example/img/earth-dark.jpg",
     bumpImageUrl: "//unpkg.com/three-globe/example/img/earth-topology.png",
     backgroundColor: "rgba(0,0,0,0)",
-    atmosphereColor: "#3a6ea5",
-    atmosphereAltitude: 0.15,
+    atmosphereColor: "#4f46e5",
+    atmosphereAltitude: 0.25,
   } : {
     globeImageUrl: "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg",
     bumpImageUrl: "//unpkg.com/three-globe/example/img/earth-topology.png",
     backgroundColor: "rgba(0,0,0,0)",
-    atmosphereColor: "#ffffff",
-    atmosphereAltitude: 0.1,
+    atmosphereColor: "#3b82f6",
+    atmosphereAltitude: 0.2,
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl shadow-2xl border border-border/50 bg-card/30 backdrop-blur-sm cursor-move">
+    <div className="relative overflow-hidden rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.3)] border border-white/5 bg-card/10 backdrop-blur-xl cursor-move preserve-3d">
+      <motion.div 
+        animate={{ 
+          y: [0, -10, 0],
+          rotateZ: [0, 1, 0]
+        }}
+        transition={{ 
+          duration: 6, 
+          repeat: Infinity, 
+          ease: "easeInOut" 
+        }}
+        className="absolute inset-0 z-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--primary)_0%,_transparent_70%)] blur-3xl pointer-events-none" 
+      />
+      
       <div className="absolute top-4 left-6 z-10 pointer-events-none">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.6)]" />
-          <span className="text-xs font-bold uppercase tracking-widest text-foreground/80 font-sans">
-            Live Coverage
+          <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.8)]" />
+          <span className="text-xs font-bold uppercase tracking-widest text-white drop-shadow-md font-sans">
+            {language === 'en' ? 'Live Global Coverage' : 'تغطية عالمية مباشرة'}
           </span>
         </div>
       </div>

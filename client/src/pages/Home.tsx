@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useLocation, Link } from "wouter";
 import { Header } from "@/components/Header";
@@ -58,12 +59,22 @@ export default function Home() {
       <main className="flex-1 pb-20">
         {/* Hero Section */}
         {!searchParam && !categoryParam && (
-          <section className="relative w-full py-8 md:py-12 lg:py-16 overflow-hidden">
+          <motion.section 
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="relative w-full py-8 md:py-12 lg:py-16 overflow-hidden perspective-2000"
+          >
             <div className="container mx-auto px-4">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
                 {/* Left: Headlines */}
-                <div className="lg:col-span-7 flex flex-col gap-6">
+                <motion.div 
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                  className="lg:col-span-7 flex flex-col gap-6"
+                >
                   <div className="flex items-center gap-4 mb-4">
                     <h2 className="text-sm font-bold tracking-widest uppercase text-primary border-b-2 border-primary pb-1">
                       {t('hero.featured')}
@@ -79,18 +90,23 @@ export default function Home() {
                       <p className="text-muted-foreground">No featured articles found.</p>
                     </div>
                   )}
-                </div>
+                </motion.div>
 
                 {/* Right: 3D Globe */}
-                <div className="lg:col-span-5 relative hidden lg:block h-[500px]">
+                <motion.div 
+                  initial={{ opacity: 0, x: 30, rotateY: -10 }}
+                  animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                  transition={{ delay: 0.4, duration: 0.8 }}
+                  className="lg:col-span-5 relative hidden lg:block h-[500px] preserve-3d"
+                >
                   <div className="absolute top-0 right-0 z-10 bg-background/80 backdrop-blur px-3 py-1 rounded-full border border-border text-xs font-mono">
                     {t('globe.view')}
                   </div>
                   <GlobeViz height={500} />
-                </div>
+                </motion.div>
               </div>
             </div>
-          </section>
+          </motion.section>
         )}
 
         {/* Content Grid */}
@@ -106,14 +122,16 @@ export default function Home() {
                   {language === 'en' ? 'Syncing...' : 'جاري المزامنة...'}
                 </div>
               )}
-              <button 
+              <motion.button 
+                whileHover={{ rotate: 180, scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={handleSync} 
                 disabled={syncMutation.isPending}
-                className="p-2 hover:bg-muted rounded-full transition-colors disabled:opacity-50"
+                className="p-2 hover:bg-muted rounded-full transition-colors disabled:opacity-50 shadow-sm"
                 title="Sync News"
               >
                 <RefreshCw className={`w-5 h-5 text-muted-foreground ${syncMutation.isPending ? 'animate-spin' : ''}`} />
-              </button>
+              </motion.button>
             </div>
           </div>
 
@@ -138,8 +156,15 @@ export default function Home() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {/* If filtering, show all articles. If home, skip the featured one which is already shown */}
-              {(searchParam || categoryParam ? articles : gridArticles)?.map((article) => (
-                <ArticleCard key={article.id} article={article} />
+              {(searchParam || categoryParam ? articles : gridArticles)?.map((article, index) => (
+                <motion.div
+                  key={article.id}
+                  initial={{ opacity: 0, y: 20, rotateX: -10 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                >
+                  <ArticleCard article={article} />
+                </motion.div>
               ))}
               
               {(!articles || articles.length === 0) && (

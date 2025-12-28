@@ -41,14 +41,14 @@ export default function ArticleDetail() {
   const bgImage = article.imageUrl || "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=600&fit=crop";
 
   return (
-    <div className={`min-h-screen bg-background font-sans ${dir === 'rtl' ? 'rtl' : 'ltr'}`}>
+    <div className={`min-h-screen bg-background font-sans ${dir === 'rtl' ? 'rtl' : 'ltr'} perspective-2000`}>
       <Header />
       
       <motion.article 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="pb-20"
+        initial={{ opacity: 0, rotateX: 5, y: 50 }}
+        animate={{ opacity: 1, rotateX: 0, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="pb-20 preserve-3d"
       >
         {/* Hero Image */}
         <div className="relative h-[50vh] min-h-[400px] w-full overflow-hidden">

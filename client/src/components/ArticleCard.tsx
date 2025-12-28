@@ -46,17 +46,23 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
   return (
     <motion.div
       style={{
-        rotateX: featured ? rotateX : 0,
-        rotateY: featured ? rotateY : 0,
+        rotateX: rotateX,
+        rotateY: rotateY,
         transformStyle: "preserve-3d",
       }}
-      onMouseMove={featured ? handleMouseMove : undefined}
-      onMouseLeave={featured ? handleMouseLeave : undefined}
+      whileHover={{ 
+        scale: 1.05, 
+        z: 50,
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)"
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className={`
         relative group rounded-xl overflow-hidden bg-card border border-border/40
-        transition-all duration-500 hover:shadow-2xl hover:border-primary/20
+        transition-all duration-500 hover:border-primary/40
         active:scale-[0.98]
-        ${featured ? 'col-span-1 md:col-span-2 row-span-2 min-h-[400px]' : 'min-h-[320px]'}
+        ${featured ? 'col-span-1 md:col-span-2 row-span-2 min-h-[450px]' : 'min-h-[350px]'}
+        perspective-1000
       `}
     >
       <Link href={`/article/${article.id}`} className="block h-full w-full">
@@ -97,24 +103,24 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
             </span>
           </div>
 
-          <div className="flex-1">
+          <div className="flex-1" style={{ transform: "translateZ(30px)" }}>
             <h3 className={`
               font-serif font-bold leading-tight mb-3
-              ${featured ? 'text-3xl md:text-4xl lg:text-5xl text-white' : 'text-xl text-card-foreground group-hover:text-primary transition-colors'}
+              ${featured ? 'text-3xl md:text-4xl lg:text-5xl text-white drop-shadow-md' : 'text-xl text-card-foreground group-hover:text-primary transition-colors'}
             `}>
               {article.title}
             </h3>
             
             <p className={`
               font-sans leading-relaxed line-clamp-6
-              ${featured ? 'text-lg text-gray-200 max-w-2xl' : 'text-sm text-muted-foreground'}
+              ${featured ? 'text-lg text-gray-200 max-w-2xl drop-shadow-sm' : 'text-sm text-muted-foreground'}
             `}>
               {article.summary}
             </p>
           </div>
 
           {/* Footer */}
-          <div className="mt-6 flex flex-col gap-4 pt-4 border-t border-border/10">
+          <div className="mt-6 flex flex-col gap-4 pt-4 border-t border-border/10" style={{ transform: "translateZ(20px)" }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-medium opacity-70">
                 <Globe className="w-3 h-3" />
@@ -132,15 +138,11 @@ export function ArticleCard({ article, featured = false }: ArticleCardProps) {
               </span>
             </div>
             
-            <a 
-              href={article.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="w-full py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-center text-xs font-bold transition-colors"
+            <div 
+              className="w-full py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-center text-xs font-bold transition-colors cursor-pointer"
             >
               {dir === 'rtl' ? 'اقرأ المقال الكامل' : 'Read full article'}
-            </a>
+            </div>
           </div>
         </div>
       </Link>
