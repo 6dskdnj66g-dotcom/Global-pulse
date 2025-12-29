@@ -356,7 +356,7 @@ export function Header() {
       {/* Breaking News Ticker */}
       <div className="fixed top-16 left-0 right-0 z-[90] bg-primary/10 border-b border-primary/20 h-8 flex items-center overflow-hidden backdrop-blur-sm">
         <div className="bg-primary px-3 h-full flex items-center text-[10px] font-black uppercase tracking-wider text-primary-foreground shrink-0 z-10">
-          Breaking
+          Breaking News
         </div>
         <div className="flex-1 overflow-hidden relative">
           <motion.div 
