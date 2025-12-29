@@ -7,10 +7,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, Clock, Globe, RefreshCw, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { arSA, enUS } from "date-fns/locale";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 export default function Home() {
   useLanguageEffect();
+  const { language, t, dir } = useLanguage();
   const [location] = useLocation();
   const params = new URLSearchParams(location.split('?')[1]);
   const category = params.get('category') || undefined;
