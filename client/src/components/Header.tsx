@@ -5,7 +5,8 @@ import { useLanguage } from "@/hooks/use-language";
 import { 
   Search, Globe, Landmark, Briefcase, 
   Cpu, Trophy, Radio, Newspaper, TrendingUp,
-  Moon, Sun, Languages, RefreshCw, Menu, X, Send, Bot
+  Moon, Sun, Languages, RefreshCw, PanelLeft, X, Send, Bot,
+  MessageSquare, Zap, Layout
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { CATEGORIES } from "@shared/schema";
@@ -244,26 +245,29 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-[100] bg-background/80 backdrop-blur-xl border-b border-border h-20 transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 z-[100] bg-background/95 backdrop-blur-md border-b border-border/50 h-16 transition-all duration-300">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <SidebarTrigger className="text-foreground hover:text-accent transition-all duration-300" />
-            <Link href="/" className="flex items-center gap-4 group">
-              <div className="w-10 h-10 bg-primary flex items-center justify-center transform group-hover:rotate-6 transition-transform shadow-lg rounded-sm">
-                <Globe className="w-6 h-6 text-primary-foreground" />
+          <div className="flex items-center gap-4">
+            <SidebarTrigger className="text-foreground/80 hover:text-accent transition-all duration-300">
+              <PanelLeft className="w-5 h-5" />
+            </SidebarTrigger>
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="w-9 h-9 bg-accent flex items-center justify-center transform group-hover:scale-105 transition-all shadow-lg rounded-sm">
+                <Globe className="w-5 h-5 text-accent-foreground" />
               </div>
-              <h1 className="font-serif text-2xl md:text-3xl font-black tracking-tighter text-foreground drop-shadow-sm">
-                GLOBAL<span className="text-accent">PULSE</span>
+              <h1 className="font-serif text-xl md:text-2xl font-black tracking-tight text-foreground flex items-center uppercase">
+                <span className="text-foreground">GLOBAL</span>
+                <span className="text-foreground/40 font-light ml-1">PULSE</span>
               </h1>
             </Link>
           </div>
 
-          <div className="flex items-center gap-1 md:gap-2">
+          <div className="flex items-center gap-0.5 md:gap-1">
             <AnimatePresence>
               {isSearchOpen && (
                 <motion.form 
                   initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: 240, opacity: 1 }}
+                  animate={{ width: 200, opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   onSubmit={handleSearch}
                   className="relative overflow-hidden hidden md:block"
@@ -274,15 +278,15 @@ export function Header() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t('search.placeholder')}
-                    className="w-full bg-secondary border-b border-accent/50 text-foreground px-4 py-2 text-sm focus:outline-none focus:border-accent transition-all"
+                    className="w-full bg-secondary/50 border border-border/50 text-foreground px-3 py-1.5 text-xs focus:outline-none focus:border-accent transition-all rounded-sm"
                   />
                 </motion.form>
               )}
             </AnimatePresence>
 
             <HeaderButton onClick={() => setIsSearchOpen(!isSearchOpen)} icon={Search} className="hidden md:flex" />
-            <HeaderButton onClick={() => setIsAIChatOpen(true)} icon={Bot} />
-            <HeaderButton onClick={() => window.location.reload()} icon={RefreshCw} className="hidden sm:flex" />
+            <HeaderButton onClick={() => setIsAIChatOpen(true)} icon={MessageSquare} />
+            <HeaderButton onClick={() => window.location.reload()} icon={Zap} className="hidden sm:flex" />
             <HeaderButton onClick={toggleLanguage} icon={Languages} label={language.toUpperCase()} />
             <HeaderButton onClick={toggleTheme} icon={theme === 'dark' ? Sun : Moon} />
           </div>
@@ -297,10 +301,10 @@ function HeaderButton({ onClick, icon: Icon, label, className }: { onClick: () =
   return (
     <button 
       onClick={onClick}
-      className={`p-2.5 hover:bg-accent/10 rounded-full text-foreground/70 hover:text-accent transition-all duration-300 flex items-center gap-2 ${className}`}
+      className={`px-3 py-2 hover:bg-accent/5 rounded-sm text-foreground/60 hover:text-accent transition-all duration-300 flex items-center gap-2 group ${className}`}
     >
-      <Icon className="w-5 h-5" />
-      {label && <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>}
+      <Icon className="w-[18px] h-[18px] group-hover:scale-110 transition-transform" />
+      {label && <span className="text-[11px] font-bold tracking-tight">{label}</span>}
     </button>
   );
 }
