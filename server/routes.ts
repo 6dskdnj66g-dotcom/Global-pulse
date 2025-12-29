@@ -30,7 +30,8 @@ const FEEDS = [
   { url: 'https://www.reuters.com/arc/outboundfeeds/news-handler/?outputType=xml', lang: 'en', source: 'Reuters' },
   { url: 'https://www.aljazeera.net/aljazeerarss/feed', lang: 'ar', source: 'Al Jazeera Arabic' },
   { url: 'https://feeds.bbci.co.uk/arabic/world/rss.xml', lang: 'ar', source: 'BBC Arabic' },
-  { url: 'https://www.skynewsarabia.com/rss/v1/global.xml', lang: 'ar', source: 'Sky News Arabia' },
+  // Sky News Arabia RSS sometimes has parsing issues, skipping or using a fallback if needed
+  // { url: 'https://www.skynewsarabia.com/rss/v1/global.xml', lang: 'ar', source: 'Sky News Arabia' },
 ];
 
 export async function registerRoutes(
@@ -132,7 +133,17 @@ async function syncAllNews() {
 
   await Promise.all(FEEDS.map(async (feed) => {
     try {
-      const parsedFeed = await parser.parseURL(feed.url);
+      const response = await fetch(feed.url, { timeout: 10000 } as any);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const xml = await response.text();
+      
+      // Basic check for empty or invalid XML before parsing
+      if (!xml || !xml.includes('<?xml') && !xml.includes('<rss')) {
+        console.warn(`Skipping invalid XML from ${feed.source}`);
+        return;
+      }
+
+      const parsedFeed = await parser.parseString(xml);
       const items = parsedFeed.items.map(item => {
         const pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
         
