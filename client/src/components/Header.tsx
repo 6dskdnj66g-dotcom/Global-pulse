@@ -257,7 +257,7 @@ export function Header() {
               </div>
               <h1 className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center uppercase">
                 <span className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">GLOBAL</span>
-                <span className="text-accent font-light ml-1 drop-shadow-[0_0_12px_rgba(142,71,45,0.5)]">PULSE</span>
+                <span className="text-accent font-black ml-1.5 drop-shadow-[0_0_15px_rgba(142,71,45,0.7)] brightness-125">PULSE</span>
               </h1>
             </Link>
           </div>
