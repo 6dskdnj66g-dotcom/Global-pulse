@@ -62,4 +62,39 @@ Preferred communication style: Simple, everyday language.
 
 ### Environment Variables Required
 - `DATABASE_URL` - PostgreSQL connection string (required for database operations)
-- NewsAPI key should be configured for the sync functionality in `server/routes.ts`
+- `OPENAI_API_KEY` - OpenAI API key for AI news assistant feature
+
+## Vercel Deployment
+
+### Project Structure for Vercel
+- `api/[...path].ts` - Catch-all serverless Express function for backend API routes
+- `vercel.json` - Vercel configuration file with function settings
+- `dist/public` - Vite build output directory for frontend
+
+### Deployment Steps
+1. Push code to GitHub
+2. Import project in Vercel Dashboard
+3. Configure environment variables:
+   - `POSTGRES_URL` or `DATABASE_URL` - PostgreSQL connection string (Vercel Postgres recommended)
+   - `OPENAI_API_KEY` - OpenAI API key for AI assistant
+4. Deploy
+
+### Database Setup for Vercel
+- Use Vercel Postgres (Neon) for database
+- Create the articles table using SQL:
+```sql
+CREATE TABLE IF NOT EXISTS articles (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  summary TEXT NOT NULL,
+  content TEXT,
+  url TEXT NOT NULL UNIQUE,
+  image_url TEXT,
+  source TEXT NOT NULL,
+  category TEXT NOT NULL,
+  language TEXT NOT NULL DEFAULT 'en',
+  published_at TIMESTAMP DEFAULT NOW(),
+  location JSONB
+);
+```
+- After deployment, call `/api/articles/sync` to populate articles
