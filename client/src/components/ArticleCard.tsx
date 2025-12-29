@@ -1,110 +1,66 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
+import { arSA, enUS } from "date-fns/locale";
 import { Article } from "@shared/schema";
 import { useLanguage } from "@/hooks/use-language";
-import { Globe, ArrowRight, Share2, Bookmark } from "lucide-react";
+import { Globe, ArrowRight, Clock } from "lucide-react";
 
 interface ArticleCardProps {
   article: Article;
-  featured?: boolean;
 }
 
-export function ArticleCard({ article, featured = false }: ArticleCardProps) {
-  const { language, t, dir } = useLanguage();
-
-  const handleShare = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (navigator.share) {
-      navigator.share({
-        title: article.title,
-        text: article.summary,
-        url: article.url,
-      }).catch(() => {});
-    }
-  };
+export function ArticleCard({ article }: ArticleCardProps) {
+  const { language, dir } = useLanguage();
 
   return (
-    <motion.div
-      whileHover={{ y: -8, scale: 1.02 }}
-      className={`
-        group relative h-full flex flex-col overflow-hidden glass-card transition-all duration-300
-        ${featured ? 'md:flex-row shadow-2xl' : 'shadow-lg'}
-        hover:shadow-primary/20
-      `}
-    >
-      <Link href={`/article/${article.id}`} className="flex flex-col h-full w-full">
-        {/* Image */}
-        <div className={`relative overflow-hidden ${featured ? 'md:w-1/2 h-[300px] md:h-full' : 'h-48'}`}>
+    <Link href={`/article/${article.id}`}>
+      <motion.div 
+        whileHover={{ y: -5 }}
+        className="group cursor-pointer flex flex-col h-full bg-card border border-border overflow-hidden hover:shadow-2xl transition-all duration-500 rounded-sm"
+      >
+        <div className="relative aspect-video overflow-hidden">
           <img 
-            loading="lazy"
-            src={article.imageUrl || 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&q=80'} 
+            src={article.imageUrl || 'https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=2069&auto=format&fit=crop'} 
             alt={article.title}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-          
-          <div className="absolute top-4 left-4 flex gap-2">
-            <span className="px-3 py-1 bg-primary text-white text-[10px] font-black uppercase tracking-widest shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute top-2 left-2 md:top-4 md:left-4">
+            <span className="bg-accent text-accent-foreground text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] px-2 py-0.5 md:px-3 md:py-1 rounded-sm shadow-lg">
               {article.category}
             </span>
           </div>
-
-          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button 
-              onClick={handleShare}
-              className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors"
-            >
-              <Share2 className="w-4 h-4" />
-            </button>
-            <button 
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-              className="p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-primary transition-colors"
-            >
-              <Bookmark className="w-4 h-4" />
-            </button>
-          </div>
         </div>
 
-        {/* Content */}
-        <div className={`p-6 flex flex-col flex-1 ${featured ? 'md:w-1/2 bg-white/5' : ''}`}>
-          <div className="mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Globe className="w-3 h-3 text-primary" />
-              {article.source}
-            </span>
+        <div className="flex-1 p-4 md:p-6 flex flex-col gap-3 md:gap-4 bg-secondary/5 group-hover:bg-secondary/20 transition-colors duration-500">
+          <div className="flex items-center gap-2 text-foreground/40 text-[9px] md:text-[10px] font-black uppercase tracking-widest">
+            <Globe className="w-3 h-3 text-accent" />
+            <span>{article.source}</span>
+            <span className="mx-1 opacity-20">•</span>
+            <Clock className="w-3 h-3" />
             <span>
-              {format(new Date(article.publishedAt), 'MMM dd, yyyy')}
+              {formatDistanceToNow(new Date(article.publishedAt), { 
+                addSuffix: true,
+                locale: language === 'ar' ? arSA : enUS 
+              })}
             </span>
           </div>
 
-          <h3 className={`
-            font-serif font-black leading-tight mb-3 group-hover:text-primary transition-colors
-            ${featured ? 'text-2xl md:text-4xl' : 'text-xl'}
-          `}>
+          <h3 className="font-serif text-lg md:text-xl font-black leading-tight group-hover:text-accent transition-colors duration-300 line-clamp-2">
             {article.title}
           </h3>
 
-          <p className={`
-            text-muted-foreground line-clamp-3 font-serif italic
-            ${featured ? 'text-base md:text-lg mb-6' : 'text-sm mb-4'}
-          `}>
+          <p className="text-foreground/60 text-xs md:text-sm font-serif italic line-clamp-2 flex-1">
             {article.summary}
           </p>
 
-          <div className="mt-auto pt-4 border-t border-border/10 flex items-center justify-between">
-            <span className={`
-              flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary
-              group-hover:translate-x-1 transition-transform
-              ${dir === 'rtl' ? 'flex-row-reverse' : ''}
-            `}>
-              {t('read.more')}
-              <ArrowRight className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
-            </span>
+          <div className="pt-2 md:pt-4 flex items-center gap-2 text-accent font-black uppercase text-[10px] tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+            {language === 'en' ? 'Read More' : 'اقرأ المزيد'}
+            <ArrowRight className={`w-3 h-3 group-hover:translate-x-1 transition-transform ${dir === 'rtl' ? 'rotate-180' : ''}`} />
           </div>
         </div>
-      </Link>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }
