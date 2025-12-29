@@ -75,8 +75,8 @@ export default function Home() {
                     
                     <div className="flex flex-wrap items-center gap-4 pt-4 md:gap-6">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-sm bg-accent flex items-center justify-center shadow-lg">
-                          <Globe className="w-4 h-4 text-accent-foreground" />
+                        <div className="w-8 h-8 rounded-sm bg-primary flex items-center justify-center shadow-lg">
+                          <Globe className="w-4 h-4 text-primary-foreground" />
                         </div>
                         <span className="text-white font-serif font-black uppercase text-xs md:text-sm tracking-widest">
                           {featuredArticle.source}
@@ -84,7 +84,7 @@ export default function Home() {
                       </div>
                       
                       <Link href={`/article/${featuredArticle.id}`}>
-                        <button className="bg-accent text-accent-foreground hover:bg-white hover:text-black transition-all duration-500 px-6 py-2.5 md:px-8 md:py-3 font-black uppercase text-[10px] md:text-xs tracking-[0.2em] flex items-center gap-2 group shadow-xl rounded-sm">
+                        <button className="bg-primary text-primary-foreground hover:bg-white hover:text-black transition-all duration-500 px-6 py-2.5 md:px-8 md:py-3 font-black uppercase text-[10px] md:text-xs tracking-[0.2em] flex items-center gap-2 group shadow-xl rounded-sm">
                           {language === 'en' ? 'Read Full Story' : 'اقرأ القصة الكاملة'}
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </button>
@@ -135,23 +135,23 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-secondary text-foreground border-t-4 border-accent py-16 md:py-24">
+      <footer className="bg-secondary text-secondary-foreground border-t-4 border-primary py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-16">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-primary flex items-center justify-center rounded-sm">
                 <Globe className="w-8 h-8 text-primary-foreground" />
               </div>
-              <h1 className="font-serif text-4xl font-black tracking-tighter">
-                GLOBAL<span className="text-accent">PULSE</span>
+              <h1 className="font-serif text-4xl font-black tracking-tighter text-secondary-foreground">
+                GLOBAL<span className="text-primary">PULSE</span>
               </h1>
             </div>
-            <div className="text-accent font-serif font-black text-xl tracking-tighter">
+            <div className="text-primary font-serif font-black text-xl tracking-tighter">
               Developed by Hassanein Salah
             </div>
           </div>
-          <div className="text-center text-foreground/40 text-[10px] font-black uppercase tracking-[0.5em]">
-            © {new Date().getFullYear()} GLOBAL PULSE MEDIA GROUP • ALL RIGHTS RESERVED
+          <div className="text-center text-muted-foreground text-[10px] font-black uppercase tracking-[0.5em]">
+            {new Date().getFullYear()} GLOBAL PULSE MEDIA GROUP - ALL RIGHTS RESERVED
           </div>
         </div>
       </footer>

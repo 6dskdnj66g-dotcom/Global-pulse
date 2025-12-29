@@ -27,17 +27,17 @@ export function ArticleCard({ article }: ArticleCardProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="absolute top-2 left-2 md:top-4 md:left-4">
-            <span className="bg-accent text-accent-foreground text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] px-2 py-0.5 md:px-3 md:py-1 rounded-sm shadow-lg">
+            <span className="bg-primary text-primary-foreground text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] px-2 py-0.5 md:px-3 md:py-1 rounded-sm shadow-lg">
               {article.category}
             </span>
           </div>
         </div>
 
         <div className="flex-1 p-4 md:p-6 flex flex-col gap-3 md:gap-4 bg-secondary/5 group-hover:bg-secondary/20 transition-colors duration-500">
-          <div className="flex items-center gap-2 text-foreground/40 text-[9px] md:text-[10px] font-black uppercase tracking-widest">
-            <Globe className="w-3 h-3 text-accent" />
+          <div className="flex items-center gap-2 text-muted-foreground text-[9px] md:text-[10px] font-bold uppercase tracking-widest">
+            <Globe className="w-3 h-3 text-primary" />
             <span>{article.source}</span>
-            <span className="mx-1 opacity-20">•</span>
+            <span className="mx-1 opacity-30">|</span>
             <Clock className="w-3 h-3" />
             <span>
               {formatDistanceToNow(new Date(article.publishedAt), { 
@@ -45,13 +45,13 @@ export function ArticleCard({ article }: ArticleCardProps) {
                 locale: language === 'ar' ? arSA : enUS 
               })}
             </span>
-            <span className="mx-1 opacity-20">•</span>
-            <span className="text-accent/60">
-              {Math.ceil((article.content?.length || 200) / 1000) + 1} min read
+            <span className="mx-1 opacity-30">|</span>
+            <span className="text-primary/80">
+              {Math.ceil((article.content?.length || 200) / 1000) + 1} {language === 'ar' ? 'د قراءة' : 'min'}
             </span>
           </div>
 
-          <h3 className="font-serif text-lg md:text-xl font-black leading-tight group-hover:text-accent transition-colors duration-300 line-clamp-2">
+          <h3 className="font-serif text-lg md:text-xl font-black leading-tight text-card-foreground group-hover:text-primary transition-colors duration-300 line-clamp-2">
             {article.title}
           </h3>
 
@@ -59,7 +59,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
             {article.summary}
           </p>
 
-          <div className="pt-2 md:pt-4 flex items-center gap-2 text-accent font-black uppercase text-[10px] tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+          <div className="pt-2 md:pt-4 flex items-center gap-2 text-primary font-black uppercase text-[10px] tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
             {language === 'en' ? 'Read More' : 'اقرأ المزيد'}
             <ArrowRight className={`w-3 h-3 group-hover:translate-x-1 transition-transform ${dir === 'rtl' ? 'rotate-180' : ''}`} />
           </div>

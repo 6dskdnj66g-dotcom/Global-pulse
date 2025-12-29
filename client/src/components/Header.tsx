@@ -30,12 +30,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 const SOURCES = [
   { name: 'BBC News', icon: Radio },
   { name: 'Al Jazeera', icon: Globe },
-  { name: 'Axios', icon: Newspaper },
   { name: 'Reuters', icon: TrendingUp },
+  { name: 'CNN', icon: Newspaper },
+  { name: 'The Guardian', icon: Newspaper },
+  { name: 'Sky News', icon: Radio },
 ];
 
 export function AppSidebar() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { t, language } = useLanguage();
 
   const getIcon = (category: string) => {
@@ -49,24 +51,24 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="bg-secondary/95 backdrop-blur-xl border-r border-border/50 transition-all duration-300 ease-in-out">
-      <SidebarHeader className="p-6 border-b border-border/50">
+    <Sidebar className="bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out">
+      <SidebarHeader className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-accent flex items-center justify-center rounded-sm shadow-xl">
-            <Globe className="w-6 h-6 text-accent-foreground" />
+          <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-sm shadow-xl">
+            <Globe className="w-6 h-6 text-primary-foreground" />
           </div>
-          <h1 className="font-serif text-2xl font-black tracking-tighter text-foreground">
-            GLOBAL<span className="text-accent">PULSE</span>
+          <h1 className="font-serif text-2xl font-black tracking-tighter text-sidebar-foreground">
+            GLOBAL<span className="text-primary">PULSE</span>
           </h1>
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="p-2 space-y-6">
+      <SidebarContent className="p-3 space-y-6">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.4em] text-accent/80 mb-4 px-4">
-            Editorial
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 px-3">
+            {language === 'ar' ? 'الأقسام' : 'Categories'}
           </SidebarGroupLabel>
-          <SidebarMenu className="gap-1">
+          <SidebarMenu className="gap-1.5">
             {CATEGORIES.map((category) => {
               const Icon = getIcon(category);
               const isActive = location.includes(`category=${category}`);
@@ -74,15 +76,18 @@ export function AppSidebar() {
                 <SidebarMenuItem key={category}>
                   <SidebarMenuButton 
                     asChild 
-                    className={`h-12 px-4 transition-all duration-300 rounded-sm border ${
+                    className={`h-11 px-3 transition-all duration-200 rounded-md ${
                       isActive 
-                        ? 'bg-accent/15 text-accent border-accent/20' 
-                        : 'hover:bg-accent/10 hover:text-accent text-foreground/70 border-transparent'
+                        ? 'bg-primary/20 text-primary border-l-2 border-primary' 
+                        : 'hover:bg-primary/10 hover:text-primary text-sidebar-foreground/80'
                     }`}
                   >
-                    <Link href={`/?category=${category}`} className="flex items-center gap-4">
-                      <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                      <span className="font-serif font-black uppercase text-[12px] tracking-widest">
+                    <Link 
+                      href={`/?category=${category}`} 
+                      className="flex items-center gap-3"
+                    >
+                      <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : ''}`} />
+                      <span className="font-sans font-semibold text-[13px]">
                         {t(`nav.${category.toLowerCase()}`)}
                       </span>
                     </Link>
@@ -94,28 +99,41 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.4em] text-accent/80 mb-4 px-4">
-            Global Sources
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 px-3">
+            {language === 'ar' ? 'المصادر العالمية' : 'Global Sources'}
           </SidebarGroupLabel>
           <SidebarMenu className="gap-1">
-            {SOURCES.map((source) => (
-              <SidebarMenuItem key={source.name}>
-                <SidebarMenuButton asChild className="h-10 px-4 hover:bg-accent/5 text-foreground/60 hover:text-accent transition-all duration-300 rounded-sm">
-                  <Link href={`/?search=${encodeURIComponent(source.name)}`} className="flex items-center gap-4">
-                    <source.icon className="w-4 h-4 opacity-50" />
-                    <span className="font-serif italic text-xs tracking-tight">{source.name}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            {SOURCES.map((source) => {
+              const isActive = location.includes(`search=${encodeURIComponent(source.name)}`);
+              return (
+                <SidebarMenuItem key={source.name}>
+                  <SidebarMenuButton 
+                    asChild 
+                    className={`h-10 px-3 transition-all duration-200 rounded-md ${
+                      isActive 
+                        ? 'bg-primary/15 text-primary' 
+                        : 'hover:bg-primary/10 text-sidebar-foreground/60 hover:text-primary'
+                    }`}
+                  >
+                    <Link 
+                      href={`/?search=${encodeURIComponent(source.name)}`}
+                      className="flex items-center gap-3"
+                    >
+                      <source.icon className="w-4 h-4 opacity-70" />
+                      <span className="font-sans text-xs">{source.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-6 border-t border-border/50 bg-accent/5">
-        <div className="space-y-2">
-          <div className="text-[9px] font-black uppercase tracking-[0.4em] text-foreground/30">Chief Architect</div>
-          <div className="text-accent font-serif font-black tracking-tighter text-base drop-shadow-sm">Hassanein Salah</div>
+      <SidebarFooter className="p-6 border-t border-sidebar-border">
+        <div className="space-y-1">
+          <div className="text-[9px] font-bold uppercase tracking-[0.3em] text-sidebar-foreground/40">Developer</div>
+          <div className="text-primary font-serif font-black tracking-tight text-sm">Hassanein Salah</div>
         </div>
       </SidebarFooter>
     </Sidebar>
@@ -253,16 +271,16 @@ export function Header() {
       <header className="fixed top-0 left-0 right-0 z-[100] bg-background/95 backdrop-blur-md border-b border-border/50 h-16 transition-all duration-300">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="text-foreground/80 hover:text-accent transition-all duration-300">
+            <SidebarTrigger className="text-foreground hover:text-primary transition-all duration-300">
               <PanelLeft className="w-5 h-5" />
             </SidebarTrigger>
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 bg-accent flex items-center justify-center transform group-hover:scale-105 transition-all shadow-lg rounded-sm">
-                <Globe className="w-5 h-5 text-accent-foreground" />
+              <div className="w-9 h-9 bg-primary flex items-center justify-center transform group-hover:scale-105 transition-all shadow-lg rounded-sm">
+                <Globe className="w-5 h-5 text-primary-foreground" />
               </div>
               <h1 className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center uppercase">
-                <span className="text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">GLOBAL</span>
-                <span className="text-accent font-black ml-1.5 drop-shadow-[0_0_15px_rgba(142,71,45,0.7)] brightness-125">PULSE</span>
+                <span className="text-foreground">GLOBAL</span>
+                <span className="text-primary font-black ml-1.5">PULSE</span>
               </h1>
             </Link>
           </div>
@@ -299,20 +317,20 @@ export function Header() {
       </header>
       
       {/* Breaking News Ticker */}
-      <div className="fixed top-16 left-0 right-0 z-[90] bg-accent/10 border-b border-accent/20 h-8 flex items-center overflow-hidden backdrop-blur-sm">
-        <div className="bg-accent px-3 h-full flex items-center text-[10px] font-black uppercase tracking-wider text-accent-foreground shrink-0 z-10">
+      <div className="fixed top-16 left-0 right-0 z-[90] bg-primary/10 border-b border-primary/20 h-8 flex items-center overflow-hidden backdrop-blur-sm">
+        <div className="bg-primary px-3 h-full flex items-center text-[10px] font-black uppercase tracking-wider text-primary-foreground shrink-0 z-10">
           Breaking
         </div>
         <div className="flex-1 overflow-hidden relative">
           <motion.div 
             animate={{ x: [1000, -2000] }}
             transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            className="whitespace-nowrap flex items-center gap-12 text-[11px] font-medium text-foreground/80"
+            className="whitespace-nowrap flex items-center gap-12 text-[11px] font-medium text-foreground"
           >
-            <span>• Global Pulse: Global markets show steady growth in tech sectors</span>
-            <span>• Breaking: New advancements in AI news delivery announced</span>
-            <span>• Update: International summit addresses climate action strategies</span>
-            <span>• Pulse: Cultural festival celebrates global diversity in the arts</span>
+            <span>Global Pulse: Global markets show steady growth in tech sectors</span>
+            <span>Breaking: New advancements in AI news delivery announced</span>
+            <span>Update: International summit addresses climate action strategies</span>
+            <span>Pulse: Cultural festival celebrates global diversity in the arts</span>
           </motion.div>
         </div>
       </div>
@@ -325,7 +343,7 @@ function HeaderButton({ onClick, icon: Icon, label, className }: { onClick: () =
   return (
     <button 
       onClick={onClick}
-      className={`px-3 py-2 hover:bg-accent/5 rounded-sm text-foreground/60 hover:text-accent transition-all duration-300 flex items-center gap-2 group ${className}`}
+      className={`px-3 py-2 hover:bg-primary/10 rounded-sm text-foreground hover:text-primary transition-all duration-300 flex items-center gap-2 group ${className}`}
     >
       <Icon className="w-[18px] h-[18px] group-hover:scale-110 transition-transform" />
       {label && <span className="text-[11px] font-bold tracking-tight">{label}</span>}
