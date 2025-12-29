@@ -292,6 +292,25 @@ export function Header() {
           </div>
         </div>
       </header>
+      
+      {/* Breaking News Ticker */}
+      <div className="fixed top-16 left-0 right-0 z-[90] bg-accent/10 border-b border-accent/20 h-8 flex items-center overflow-hidden backdrop-blur-sm">
+        <div className="bg-accent px-3 h-full flex items-center text-[10px] font-black uppercase tracking-wider text-accent-foreground shrink-0 z-10">
+          Breaking
+        </div>
+        <div className="flex-1 overflow-hidden relative">
+          <motion.div 
+            animate={{ x: [1000, -2000] }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            className="whitespace-nowrap flex items-center gap-12 text-[11px] font-medium text-foreground/80"
+          >
+            <span>• Global Pulse: Global markets show steady growth in tech sectors</span>
+            <span>• Breaking: New advancements in AI news delivery announced</span>
+            <span>• Update: International summit addresses climate action strategies</span>
+            <span>• Pulse: Cultural festival celebrates global diversity in the arts</span>
+          </motion.div>
+        </div>
+      </div>
       <AIChatPanel isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
     </>
   );

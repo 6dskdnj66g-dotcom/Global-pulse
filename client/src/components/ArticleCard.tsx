@@ -45,6 +45,10 @@ export function ArticleCard({ article }: ArticleCardProps) {
                 locale: language === 'ar' ? arSA : enUS 
               })}
             </span>
+            <span className="mx-1 opacity-20">•</span>
+            <span className="text-accent/60">
+              {Math.ceil((article.content?.length || 200) / 1000) + 1} min read
+            </span>
           </div>
 
           <h3 className="font-serif text-lg md:text-xl font-black leading-tight group-hover:text-accent transition-colors duration-300 line-clamp-2">
