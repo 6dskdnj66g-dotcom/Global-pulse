@@ -34,7 +34,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Premium Hero Featured Story */}
-        <section className="relative w-full h-[70vh] min-h-[500px] overflow-hidden">
+        <section className="relative w-full h-[50vh] md:h-[70vh] min-h-[350px] md:min-h-[500px] overflow-hidden">
           {isLoading ? (
             <Skeleton className="w-full h-full" />
           ) : featuredArticle ? (
@@ -65,7 +65,7 @@ export default function Home() {
                       </span>
                     </div>
                     
-                    <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tighter">
+                    <h2 className="font-serif text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tighter line-clamp-3">
                       {featuredArticle.title}
                     </h2>
                     

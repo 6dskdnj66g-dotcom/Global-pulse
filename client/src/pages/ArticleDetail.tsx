@@ -10,7 +10,7 @@ import { Link } from "wouter";
 export default function ArticleDetail() {
   useLanguageEffect();
   const [, params] = useRoute("/article/:id");
-  const { dir } = useLanguage();
+  const { dir, language } = useLanguage();
   
   const id = params ? parseInt(params.id) : 0;
   const { data: article, isLoading } = useArticle(id);
@@ -55,15 +55,16 @@ export default function ArticleDetail() {
           <img 
             src={bgImage} 
             alt={article.title}
+            loading="lazy"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
           
           <div className="absolute bottom-0 w-full p-6 md:p-12">
             <div className="container mx-auto">
-              <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 text-sm font-medium transition-colors">
+              <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 text-sm font-medium transition-colors" aria-label={language === 'ar' ? 'العودة إلى الأخبار' : 'Back to News'}>
                 <ArrowLeft className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
-                Back to News
+                {language === 'ar' ? 'العودة إلى الأخبار' : 'Back to News'}
               </Link>
               
               <div className="space-y-4 max-w-4xl">

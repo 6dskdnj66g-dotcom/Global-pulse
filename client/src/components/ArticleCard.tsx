@@ -23,8 +23,8 @@ export function ArticleCard({ article }: ArticleCardProps) {
   useEffect(() => {
     const saved = localStorage.getItem('bookmarkedArticles');
     if (saved) {
-      const bookmarks = JSON.parse(saved) as number[];
-      setIsBookmarked(bookmarks.includes(article.id));
+      const bookmarks = JSON.parse(saved) as string[];
+      setIsBookmarked(bookmarks.includes(String(article.id)));
     }
   }, [article.id]);
 
@@ -33,16 +33,17 @@ export function ArticleCard({ article }: ArticleCardProps) {
     e.stopPropagation();
     
     const saved = localStorage.getItem('bookmarkedArticles');
-    let bookmarks: number[] = saved ? JSON.parse(saved) : [];
+    let bookmarks: string[] = saved ? JSON.parse(saved) : [];
+    const articleIdStr = String(article.id);
     
     if (isBookmarked) {
-      bookmarks = bookmarks.filter(id => id !== article.id);
+      bookmarks = bookmarks.filter(id => id !== articleIdStr);
       toast({
         title: language === 'ar' ? 'تم إزالة المقال' : 'Article removed',
         description: language === 'ar' ? 'تم إزالة المقال من القراءة لاحقاً' : 'Removed from read later',
       });
     } else {
-      bookmarks.push(article.id);
+      bookmarks.push(articleIdStr);
       toast({
         title: language === 'ar' ? 'تم الحفظ' : 'Saved',
         description: language === 'ar' ? 'تم حفظ المقال للقراءة لاحقاً' : 'Saved for reading later',
@@ -107,6 +108,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
             <img 
               src={article.imageUrl || 'https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=2069&auto=format&fit=crop'} 
               alt={article.title}
+              loading="lazy"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -119,6 +121,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
             <div className="absolute top-2 right-2 md:top-4 md:right-4 flex gap-2">
               <button 
                 onClick={handleBookmark}
+                aria-label={isBookmarked ? (language === 'ar' ? 'إزالة من المحفوظات' : 'Remove bookmark') : (language === 'ar' ? 'حفظ للقراءة لاحقاً' : 'Save for later')}
                 className={`w-8 h-8 flex items-center justify-center rounded-sm transition-all duration-200 ${
                   isBookmarked 
                     ? 'bg-primary text-primary-foreground' 
@@ -130,6 +133,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
               </button>
               <button 
                 onClick={handleShare}
+                aria-label={language === 'ar' ? 'مشاركة المقال' : 'Share article'}
                 className="w-8 h-8 flex items-center justify-center rounded-sm bg-black/50 text-white hover:bg-primary hover:text-primary-foreground transition-all duration-200"
                 data-testid={`button-share-${article.id}`}
               >
