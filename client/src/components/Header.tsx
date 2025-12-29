@@ -252,7 +252,7 @@ export function Header() {
               <div className="w-10 h-10 bg-primary flex items-center justify-center transform group-hover:rotate-6 transition-transform shadow-lg rounded-sm">
                 <Globe className="w-6 h-6 text-primary-foreground" />
               </div>
-              <h1 className="font-serif text-2xl font-black tracking-tighter text-foreground">
+              <h1 className="font-serif text-2xl md:text-3xl font-black tracking-tighter text-foreground drop-shadow-sm">
                 GLOBAL<span className="text-accent">PULSE</span>
               </h1>
             </Link>

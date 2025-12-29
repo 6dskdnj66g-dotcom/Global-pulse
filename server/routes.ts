@@ -30,8 +30,7 @@ const FEEDS = [
   { url: 'https://www.reuters.com/arc/outboundfeeds/news-handler/?outputType=xml', lang: 'en', source: 'Reuters' },
   { url: 'https://www.aljazeera.net/aljazeerarss/feed', lang: 'ar', source: 'Al Jazeera Arabic' },
   { url: 'https://feeds.bbci.co.uk/arabic/world/rss.xml', lang: 'ar', source: 'BBC Arabic' },
-  // Sky News Arabia RSS sometimes has parsing issues, skipping or using a fallback if needed
-  // { url: 'https://www.skynewsarabia.com/rss/v1/global.xml', lang: 'ar', source: 'Sky News Arabia' },
+  { url: 'https://www.axios.com/feeds/feed.rss', lang: 'ar', source: 'Axios Arabic' },
 ];
 
 export async function registerRoutes(
@@ -61,8 +60,8 @@ export async function registerRoutes(
       const context = recentArticles.map(a => `- ${a.title}: ${a.summary}`).join("\n");
       
       const systemPrompt = language === 'ar' 
-        ? `أنت مساعد أخبار ذكي لمنصة Global Pulse. استخدم السياق التالي للإجابة على أسئلة المستخدم حول الأخبار الحالية باللغة العربية. كن محترفاً ومختصراً.\n\nالسياق:\n${context}`
-        : `You are a smart news assistant for Global Pulse. Use the following context to answer user questions about current news in English. Be professional and concise.\n\nContext:\n${context}`;
+        ? `أنت مساعد أخبار ذكي لمنصة Global Pulse. استخدم السياق التالي للإجابة على أسئلة المستخدم حول الأخبار الحالية باللغة العربية. كن محترفاً ومختصراً. إذا لاحظت أخطاء إملائية واضحة في النصوص المقدمة، قم بتصحيحها في إجابتك.\n\nالسياق:\n${context}`
+        : `You are a smart news assistant for Global Pulse. Use the following context to answer user questions about current news in English. Be professional and concise. If you notice obvious typos in the provided context, correct them in your response.\n\nContext:\n${context}`;
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
