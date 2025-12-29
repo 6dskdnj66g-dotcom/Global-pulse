@@ -255,9 +255,9 @@ export function Header() {
               <div className="w-9 h-9 bg-accent flex items-center justify-center transform group-hover:scale-105 transition-all shadow-lg rounded-sm">
                 <Globe className="w-5 h-5 text-accent-foreground" />
               </div>
-              <h1 className="font-serif text-xl md:text-2xl font-black tracking-tight text-foreground flex items-center uppercase">
-                <span className="text-foreground">GLOBAL</span>
-                <span className="text-foreground/40 font-light ml-1">PULSE</span>
+              <h1 className="font-serif text-xl md:text-2xl font-black tracking-tighter text-foreground flex items-center uppercase">
+                <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">GLOBAL</span>
+                <span className="text-accent font-light ml-1 drop-shadow-[0_0_8px_rgba(142,71,45,0.3)]">PULSE</span>
               </h1>
             </Link>
           </div>

@@ -121,15 +121,10 @@ export default function ArticleDetail() {
               </p>
 
               {/* Full Content */}
-              <div className="prose prose-lg dark:prose-invert max-w-none font-sans leading-loose text-foreground/80 mb-12">
-                {article.content ? (
-                  article.content.split('\n').map((paragraph, idx) => (
-                    <p key={idx} className="mb-6">{paragraph}</p>
-                  ))
-                ) : (
-                  <p className="text-muted-foreground italic">{dir === 'rtl' ? '[محتوى المقال الكامل غير متوفر في وضع المعاينة]' : '[Full content not available in preview mode]'}</p>
-                )}
-              </div>
+              <div 
+                className="prose prose-lg dark:prose-invert max-w-none font-sans leading-loose text-foreground/80 mb-12"
+                dangerouslySetInnerHTML={{ __html: article.content || '' }}
+              />
               
               <div className="mt-12 p-6 bg-muted/30 rounded-xl border border-border flex flex-col sm:flex-row items-center justify-between gap-4">
                  <div className="flex flex-col">
