@@ -164,7 +164,7 @@ export function AIChatPanel({ isOpen, onClose }: { isOpen: boolean, onClose: () 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent side={language === 'ar' ? 'left' : 'right'} className="w-full sm:max-w-md bg-background border-border p-0 flex flex-col shadow-2xl">
-        <SheetHeader className="p-6 border-b border-border bg-secondary/30">
+        <SheetHeader className="p-6 border-b border-border bg-secondary/30 relative">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-accent flex items-center justify-center rounded-sm shadow-lg">
               <Bot className="w-6 h-6 text-accent-foreground" />
