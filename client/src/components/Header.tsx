@@ -49,11 +49,11 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="bg-sidebar border-r border-border transition-all duration-300 ease-in-out">
-      <SidebarHeader className="p-6 border-b border-border">
+    <Sidebar className="bg-secondary/95 backdrop-blur-xl border-r border-border/50 transition-all duration-300 ease-in-out">
+      <SidebarHeader className="p-6 border-b border-border/50">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-sm">
-            <Globe className="w-6 h-6 text-primary-foreground" />
+          <div className="w-10 h-10 bg-accent flex items-center justify-center rounded-sm shadow-xl">
+            <Globe className="w-6 h-6 text-accent-foreground" />
           </div>
           <h1 className="font-serif text-2xl font-black tracking-tighter text-foreground">
             GLOBAL<span className="text-accent">PULSE</span>
@@ -61,23 +61,28 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="p-2 space-y-4">
+      <SidebarContent className="p-2 space-y-6">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-2 px-4">
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.4em] text-accent/80 mb-4 px-4">
             Editorial
           </SidebarGroupLabel>
-          <SidebarMenu>
+          <SidebarMenu className="gap-1">
             {CATEGORIES.map((category) => {
               const Icon = getIcon(category);
+              const isActive = location.includes(`category=${category}`);
               return (
                 <SidebarMenuItem key={category}>
                   <SidebarMenuButton 
                     asChild 
-                    className="h-11 px-4 hover:bg-accent/10 hover:text-accent text-foreground transition-all rounded-sm"
+                    className={`h-12 px-4 transition-all duration-300 rounded-sm border ${
+                      isActive 
+                        ? 'bg-accent/15 text-accent border-accent/20' 
+                        : 'hover:bg-accent/10 hover:text-accent text-foreground/70 border-transparent'
+                    }`}
                   >
-                    <Link href={`/?category=${category}`} className="flex items-center gap-3">
-                      <Icon className="w-4 h-4" />
-                      <span className="font-serif font-bold uppercase text-[11px] tracking-wider">
+                    <Link href={`/?category=${category}`} className="flex items-center gap-4">
+                      <Icon className={`w-5 h-5 transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                      <span className="font-serif font-black uppercase text-[12px] tracking-widest">
                         {t(`nav.${category.toLowerCase()}`)}
                       </span>
                     </Link>
@@ -89,16 +94,16 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-2 px-4">
-            Sources
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.4em] text-accent/80 mb-4 px-4">
+            Global Sources
           </SidebarGroupLabel>
-          <SidebarMenu>
+          <SidebarMenu className="gap-1">
             {SOURCES.map((source) => (
               <SidebarMenuItem key={source.name}>
-                <SidebarMenuButton asChild className="h-10 px-4 hover:bg-accent/5 text-foreground/70 hover:text-accent transition-all rounded-sm">
-                  <Link href={`/?search=${encodeURIComponent(source.name)}`} className="flex items-center gap-3">
-                    <source.icon className="w-4 h-4" />
-                    <span className="font-serif italic text-xs">{source.name}</span>
+                <SidebarMenuButton asChild className="h-10 px-4 hover:bg-accent/5 text-foreground/60 hover:text-accent transition-all duration-300 rounded-sm">
+                  <Link href={`/?search=${encodeURIComponent(source.name)}`} className="flex items-center gap-4">
+                    <source.icon className="w-4 h-4 opacity-50" />
+                    <span className="font-serif italic text-xs tracking-tight">{source.name}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -107,10 +112,10 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-6 border-t border-border bg-secondary/20">
-        <div className="space-y-1">
-          <div className="text-[8px] font-black uppercase tracking-[0.3em] text-foreground/40">Developer</div>
-          <div className="text-accent font-serif font-black tracking-tighter text-sm">Hassanein Salah</div>
+      <SidebarFooter className="p-6 border-t border-border/50 bg-accent/5">
+        <div className="space-y-2">
+          <div className="text-[9px] font-black uppercase tracking-[0.4em] text-foreground/30">Chief Architect</div>
+          <div className="text-accent font-serif font-black tracking-tighter text-base drop-shadow-sm">Hassanein Salah</div>
         </div>
       </SidebarFooter>
     </Sidebar>

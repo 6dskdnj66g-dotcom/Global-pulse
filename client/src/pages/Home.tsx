@@ -11,8 +11,12 @@ import { Link } from "wouter";
 
 export default function Home() {
   useLanguageEffect();
-  const { language, t, dir } = useLanguage();
-  const { data: articles, isLoading, refetch } = useArticles({ language, limit: 50 });
+  const [location] = useLocation();
+  const params = new URLSearchParams(location.split('?')[1]);
+  const category = params.get('category') || undefined;
+  const search = params.get('search') || undefined;
+
+  const { data: articles, isLoading, refetch } = useArticles({ language, category, search, limit: 50 });
   const syncMutation = useSyncArticles();
 
   const featuredArticle = articles?.[0];
