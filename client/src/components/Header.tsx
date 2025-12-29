@@ -214,11 +214,22 @@ export function AIChatPanel({ isOpen, onClose }: { isOpen: boolean, onClose: () 
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent side={language === 'ar' ? 'left' : 'right'} className="w-full sm:max-w-md bg-background border-border p-0 flex flex-col shadow-2xl">
         <SheetHeader className="p-6 border-b border-border bg-secondary/30 relative">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-accent flex items-center justify-center rounded-sm shadow-lg">
-              <Bot className="w-6 h-6 text-accent-foreground" />
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-accent flex items-center justify-center rounded-sm shadow-lg">
+                <Bot className="w-6 h-6 text-accent-foreground" />
+              </div>
+              <SheetTitle className="font-serif text-xl font-black text-foreground">
+                {language === 'ar' ? 'المساعد الذكي' : 'AI Assistant'}
+              </SheetTitle>
             </div>
-            <SheetTitle className="font-serif text-xl font-black text-foreground">AI Assistant</SheetTitle>
+            <button 
+              onClick={onClose}
+              className="w-9 h-9 flex items-center justify-center rounded-sm bg-secondary hover:bg-destructive hover:text-destructive-foreground transition-all duration-200"
+              data-testid="button-close-ai-chat"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
         </SheetHeader>
 
