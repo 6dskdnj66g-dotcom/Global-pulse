@@ -48,21 +48,21 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="bg-black border-r border-white/10">
-      <SidebarHeader className="p-8 border-b border-white/10">
+    <Sidebar className="bg-sidebar border-r border-border transition-all duration-300 ease-in-out">
+      <SidebarHeader className="p-6 border-b border-border">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-primary flex items-center justify-center">
-            <Globe className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-sm">
+            <Globe className="w-6 h-6 text-primary-foreground" />
           </div>
-          <h1 className="font-serif text-2xl font-black tracking-tighter text-white">
-            GLOBAL<span className="text-primary">PULSE</span>
+          <h1 className="font-serif text-2xl font-black tracking-tighter text-foreground">
+            GLOBAL<span className="text-accent">PULSE</span>
           </h1>
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="p-4 space-y-8">
+      <SidebarContent className="p-2 space-y-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 px-2">
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-2 px-4">
             Editorial
           </SidebarGroupLabel>
           <SidebarMenu>
@@ -72,11 +72,11 @@ export function AppSidebar() {
                 <SidebarMenuItem key={category}>
                   <SidebarMenuButton 
                     asChild 
-                    className="h-12 px-4 hover:bg-white/5 text-white transition-colors"
+                    className="h-11 px-4 hover:bg-accent/10 hover:text-accent text-foreground transition-all rounded-sm"
                   >
-                    <Link href={`/?category=${category}`} className="flex items-center gap-4">
-                      <Icon className="w-5 h-5 text-primary" />
-                      <span className="font-serif font-black uppercase text-xs tracking-widest">
+                    <Link href={`/?category=${category}`} className="flex items-center gap-3">
+                      <Icon className="w-4 h-4" />
+                      <span className="font-serif font-bold uppercase text-[11px] tracking-wider">
                         {t(`nav.${category.toLowerCase()}`)}
                       </span>
                     </Link>
@@ -88,16 +88,16 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 px-2">
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-2 px-4">
             Sources
           </SidebarGroupLabel>
           <SidebarMenu>
             {SOURCES.map((source) => (
               <SidebarMenuItem key={source.name}>
-                <SidebarMenuButton asChild className="h-10 px-4 hover:bg-white/5 text-white/60 hover:text-white transition-all">
-                  <Link href={`/?search=${encodeURIComponent(source.name)}`} className="flex items-center gap-4">
+                <SidebarMenuButton asChild className="h-10 px-4 hover:bg-accent/5 text-foreground/70 hover:text-accent transition-all rounded-sm">
+                  <Link href={`/?search=${encodeURIComponent(source.name)}`} className="flex items-center gap-3">
                     <source.icon className="w-4 h-4" />
-                    <span className="font-serif italic text-sm">{source.name}</span>
+                    <span className="font-serif italic text-xs">{source.name}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -106,10 +106,10 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-8 border-t border-white/10">
+      <SidebarFooter className="p-6 border-t border-border bg-secondary/20">
         <div className="space-y-1">
-          <div className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Developer</div>
-          <div className="text-primary font-serif font-black tracking-tighter">Hassanein Salah</div>
+          <div className="text-[8px] font-black uppercase tracking-[0.3em] text-foreground/40">Developer</div>
+          <div className="text-accent font-serif font-black tracking-tighter text-sm">Hassanein Salah</div>
         </div>
       </SidebarFooter>
     </Sidebar>
@@ -162,13 +162,13 @@ export function AIChatPanel({ isOpen, onClose }: { isOpen: boolean, onClose: () 
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent side={language === 'ar' ? 'left' : 'right'} className="w-full sm:max-w-md bg-black border-white/10 p-0 flex flex-col">
-        <SheetHeader className="p-6 border-b border-white/10 bg-primary/5">
+      <SheetContent side={language === 'ar' ? 'left' : 'right'} className="w-full sm:max-w-md bg-background border-border p-0 flex flex-col shadow-2xl">
+        <SheetHeader className="p-6 border-b border-border bg-secondary/30">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-xl shadow-lg">
-              <Bot className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 bg-accent flex items-center justify-center rounded-sm shadow-lg">
+              <Bot className="w-6 h-6 text-accent-foreground" />
             </div>
-            <SheetTitle className="font-serif text-xl font-black text-white">AI Assistant</SheetTitle>
+            <SheetTitle className="font-serif text-xl font-black text-foreground">AI Assistant</SheetTitle>
           </div>
         </SheetHeader>
 
@@ -177,14 +177,15 @@ export function AIChatPanel({ isOpen, onClose }: { isOpen: boolean, onClose: () 
             {messages.map((msg, i) => (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`max-w-[85%] p-4 rounded-2xl font-serif text-sm leading-relaxed ${
+                <div className={`max-w-[85%] p-4 rounded-sm font-serif text-sm leading-relaxed shadow-sm transition-all duration-300 ${
                   msg.role === 'user' 
-                    ? 'bg-primary text-white rounded-tr-none' 
-                    : 'bg-white/5 text-white/90 border border-white/10 rounded-tl-none'
+                    ? 'bg-accent text-accent-foreground ml-4' 
+                    : 'bg-secondary text-foreground border border-border mr-4'
                 }`}>
                   {msg.content}
                 </div>
@@ -192,10 +193,10 @@ export function AIChatPanel({ isOpen, onClose }: { isOpen: boolean, onClose: () 
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-white/5 p-4 rounded-2xl animate-pulse flex gap-2">
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-100" />
-                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce delay-200" />
+                <div className="bg-secondary p-4 rounded-sm animate-pulse flex gap-2 border border-border">
+                  <div className="w-2 h-2 bg-accent rounded-full animate-bounce" />
+                  <div className="w-2 h-2 bg-accent rounded-full animate-bounce delay-100" />
+                  <div className="w-2 h-2 bg-accent rounded-full animate-bounce delay-200" />
                 </div>
               </div>
             )}
@@ -203,17 +204,18 @@ export function AIChatPanel({ isOpen, onClose }: { isOpen: boolean, onClose: () 
           </div>
         </ScrollArea>
 
-        <div className="p-6 border-t border-white/10 bg-black">
+        <div className="p-6 border-t border-border bg-background">
           <form onSubmit={handleSend} className="relative">
             <input 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={language === 'ar' ? "اسأل المساعد الذكي..." : "Ask AI assistant..."}
-              className="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-primary transition-colors pr-12"
+              className="w-full bg-secondary border border-border rounded-sm px-4 py-3 text-foreground text-sm focus:outline-none focus:border-accent transition-all duration-300 pr-12"
             />
             <button 
               type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-primary hover:text-white transition-colors"
+              disabled={isLoading}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-accent hover:text-foreground transition-colors disabled:opacity-50"
             >
               <Send className="w-5 h-5" />
             </button>
@@ -234,7 +236,7 @@ export function Header() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery) {
+    if (searchQuery.trim()) {
       setIsAIChatOpen(true);
       setIsSearchOpen(false);
     }
@@ -242,21 +244,21 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-[100] bg-black/90 backdrop-blur-xl border-b border-white/10 h-20">
+      <header className="fixed top-0 left-0 right-0 z-[100] bg-background/80 backdrop-blur-xl border-b border-border h-20 transition-all duration-300">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <SidebarTrigger className="text-white hover:text-primary transition-colors" />
+            <SidebarTrigger className="text-foreground hover:text-accent transition-all duration-300" />
             <Link href="/" className="flex items-center gap-4 group">
-              <div className="w-10 h-10 bg-primary flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-2xl">
-                <Globe className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-primary flex items-center justify-center transform group-hover:rotate-6 transition-transform shadow-lg rounded-sm">
+                <Globe className="w-6 h-6 text-primary-foreground" />
               </div>
-              <h1 className="font-serif text-2xl font-black tracking-tighter text-white">
-                GLOBAL<span className="text-primary">PULSE</span>
+              <h1 className="font-serif text-2xl font-black tracking-tighter text-foreground">
+                GLOBAL<span className="text-accent">PULSE</span>
               </h1>
             </Link>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             <AnimatePresence>
               {isSearchOpen && (
                 <motion.form 
@@ -264,7 +266,7 @@ export function Header() {
                   animate={{ width: 240, opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   onSubmit={handleSearch}
-                  className="relative overflow-hidden"
+                  className="relative overflow-hidden hidden md:block"
                 >
                   <input
                     autoFocus
@@ -272,15 +274,15 @@ export function Header() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t('search.placeholder')}
-                    className="w-full bg-white/5 border-b border-primary/50 text-white px-4 py-2 text-sm focus:outline-none focus:border-primary"
+                    className="w-full bg-secondary border-b border-accent/50 text-foreground px-4 py-2 text-sm focus:outline-none focus:border-accent transition-all"
                   />
                 </motion.form>
               )}
             </AnimatePresence>
 
-            <HeaderButton onClick={() => setIsSearchOpen(!isSearchOpen)} icon={Search} />
+            <HeaderButton onClick={() => setIsSearchOpen(!isSearchOpen)} icon={Search} className="hidden md:flex" />
             <HeaderButton onClick={() => setIsAIChatOpen(true)} icon={Bot} />
-            <HeaderButton onClick={() => window.location.reload()} icon={RefreshCw} />
+            <HeaderButton onClick={() => window.location.reload()} icon={RefreshCw} className="hidden sm:flex" />
             <HeaderButton onClick={toggleLanguage} icon={Languages} label={language.toUpperCase()} />
             <HeaderButton onClick={toggleTheme} icon={theme === 'dark' ? Sun : Moon} />
           </div>
@@ -291,11 +293,11 @@ export function Header() {
   );
 }
 
-function HeaderButton({ onClick, icon: Icon, label }: { onClick: () => void, icon: any, label?: string }) {
+function HeaderButton({ onClick, icon: Icon, label, className }: { onClick: () => void, icon: any, label?: string, className?: string }) {
   return (
     <button 
       onClick={onClick}
-      className="p-3 hover:bg-white/5 rounded-full text-white/60 hover:text-primary transition-all flex items-center gap-2"
+      className={`p-2.5 hover:bg-accent/10 rounded-full text-foreground/70 hover:text-accent transition-all duration-300 flex items-center gap-2 ${className}`}
     >
       <Icon className="w-5 h-5" />
       {label && <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>}
