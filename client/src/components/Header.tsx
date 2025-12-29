@@ -22,7 +22,8 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
   SidebarFooter,
-  SidebarTrigger
+  SidebarTrigger,
+  useSidebar
 } from "@/components/ui/sidebar";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -63,8 +64,9 @@ const SOURCES = [
 ];
 
 export function AppSidebar() {
-  const [location, setLocation] = useLocation();
+  const [location] = useLocation();
   const { t, language } = useLanguage();
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const getIcon = (category: string) => {
     switch (category) {
@@ -76,44 +78,49 @@ export function AppSidebar() {
     }
   };
 
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <Sidebar className="bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out">
-      <SidebarHeader className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center gap-4" dir="ltr">
-          <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-sm shadow-xl">
-            <Globe className="w-6 h-6 text-primary-foreground" />
+      <SidebarHeader className="p-4 md:p-6 border-b border-sidebar-border">
+        <div className="flex items-center gap-3 md:gap-4" dir="ltr">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-primary flex items-center justify-center rounded-sm shadow-xl">
+            <Globe className="w-5 h-5 md:w-6 md:h-6 text-primary-foreground" />
           </div>
-          <h1 className="font-serif text-2xl font-black tracking-tighter text-sidebar-foreground" dir="ltr">
+          <h1 className="font-serif text-xl md:text-2xl font-black tracking-tighter text-sidebar-foreground" dir="ltr">
             GLOBAL<span className="text-primary">PULSE</span>
           </h1>
         </div>
       </SidebarHeader>
       
-      <SidebarContent className="p-3 space-y-6">
+      <SidebarContent className="p-2 md:p-3 space-y-4 md:space-y-6">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 px-3">
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-3 md:mb-4 px-3">
             {language === 'ar' ? 'الأقسام' : 'Categories'}
           </SidebarGroupLabel>
-          <SidebarMenu className="gap-1.5">
+          <SidebarMenu className="gap-1 md:gap-1.5">
             {CATEGORIES.map((category) => {
               const Icon = getIcon(category);
               const isActive = location.includes(`category=${category}`);
               return (
                 <SidebarMenuItem key={category}>
-                  <SidebarMenuButton 
-                    asChild 
-                    className={`h-11 px-3 transition-all duration-200 rounded-md ${
-                      isActive 
-                        ? 'bg-primary/20 text-primary border-l-2 border-primary' 
-                        : 'hover:bg-primary/10 hover:text-primary text-sidebar-foreground/80'
-                    }`}
-                  >
+                  <SidebarMenuButton asChild>
                     <Link 
-                      href={`/?category=${category}`} 
-                      className="flex items-center gap-3"
+                      href={`/?category=${category}`}
+                      onClick={handleLinkClick}
+                      data-testid={`sidebar-category-${category.toLowerCase()}`}
+                      className={`h-10 md:h-11 px-3 transition-all duration-200 rounded-md flex items-center gap-3 ${
+                        isActive 
+                          ? 'bg-primary/20 text-primary' 
+                          : 'hover:bg-primary/10 hover:text-primary text-sidebar-foreground/80'
+                      }`}
                     >
                       <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : ''}`} />
-                      <span className="font-sans font-semibold text-[13px]">
+                      <span className="font-sans font-semibold text-xs md:text-[13px]">
                         {t(`nav.${category.toLowerCase()}`)}
                       </span>
                     </Link>
@@ -125,28 +132,27 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 px-3">
+          <SidebarGroupLabel className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-3 md:mb-4 px-3">
             {language === 'ar' ? 'المصادر العالمية' : 'Global Sources'}
           </SidebarGroupLabel>
-          <SidebarMenu className="gap-1">
+          <SidebarMenu className="gap-0.5 md:gap-1">
             {SOURCES.map((source) => {
               const isActive = location.includes(`search=${encodeURIComponent(source.name)}`);
               return (
                 <SidebarMenuItem key={source.name}>
-                  <SidebarMenuButton 
-                    asChild 
-                    className={`h-10 px-3 transition-all duration-200 rounded-md ${
-                      isActive 
-                        ? 'bg-primary/15 text-primary' 
-                        : 'hover:bg-primary/10 text-sidebar-foreground/60 hover:text-primary'
-                    }`}
-                  >
+                  <SidebarMenuButton asChild>
                     <Link 
                       href={`/?search=${encodeURIComponent(source.name)}`}
-                      className="flex items-center gap-3"
+                      onClick={handleLinkClick}
+                      data-testid={`sidebar-source-${source.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      className={`h-9 md:h-10 px-3 transition-all duration-200 rounded-md flex items-center gap-3 ${
+                        isActive 
+                          ? 'bg-primary/15 text-primary' 
+                          : 'hover:bg-primary/10 text-sidebar-foreground/60 hover:text-primary'
+                      }`}
                     >
                       <source.icon className="w-4 h-4 opacity-70" />
-                      <span className="font-sans text-xs">{source.name}</span>
+                      <span className="font-sans text-[11px] md:text-xs">{source.name}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -156,7 +162,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-6 border-t border-sidebar-border">
+      <SidebarFooter className="p-4 md:p-6 border-t border-sidebar-border">
         <div className="space-y-1">
           <div className="text-[9px] font-bold uppercase tracking-[0.3em] text-sidebar-foreground/40">Developer</div>
           <div className="text-primary font-serif font-black tracking-tight text-sm">Hassanein Salah</div>
@@ -308,29 +314,32 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-[100] bg-background/95 backdrop-blur-md border-b border-border/50 h-16 transition-all duration-300">
-        <div className="container mx-auto px-4 h-full flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <SidebarTrigger className="text-foreground hover:text-primary transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 z-[100] bg-background/95 backdrop-blur-md border-b border-border/50 h-14 sm:h-16 transition-all duration-300">
+        <div className="container mx-auto px-2 sm:px-4 h-full flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <SidebarTrigger 
+              className="text-foreground hover:text-primary transition-all duration-300 p-2"
+              data-testid="button-sidebar-toggle"
+            >
               <PanelLeft className="w-5 h-5" />
             </SidebarTrigger>
-            <Link href="/" className="flex items-center gap-3 group" dir="ltr">
-              <div className="w-9 h-9 bg-primary flex items-center justify-center transform group-hover:scale-105 transition-all shadow-lg rounded-sm">
-                <Globe className="w-5 h-5 text-primary-foreground" />
+            <Link href="/" className="flex items-center gap-2 sm:gap-3 group" dir="ltr">
+              <div className="w-7 h-7 sm:w-9 sm:h-9 bg-primary flex items-center justify-center transform group-hover:scale-105 transition-all shadow-lg rounded-sm">
+                <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
               </div>
-              <h1 className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center uppercase" dir="ltr">
+              <h1 className="font-serif text-lg sm:text-xl md:text-2xl font-black tracking-tighter flex items-center uppercase" dir="ltr">
                 <span className="text-foreground">GLOBAL</span>
-                <span className="text-primary font-black ml-1.5">PULSE</span>
+                <span className="text-primary font-black ml-1 sm:ml-1.5">PULSE</span>
               </h1>
             </Link>
           </div>
 
-          <div className="flex items-center gap-0.5 md:gap-1">
+          <div className="flex items-center gap-0">
             <AnimatePresence>
               {isSearchOpen && (
                 <motion.form 
                   initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: 200, opacity: 1 }}
+                  animate={{ width: 160, opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   onSubmit={handleSearch}
                   className="relative overflow-hidden hidden md:block"
@@ -342,30 +351,31 @@ export function Header() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t('search.placeholder')}
                     className="w-full bg-secondary/50 border border-border/50 text-foreground px-3 py-1.5 text-xs focus:outline-none focus:border-accent transition-all rounded-sm"
+                    data-testid="input-search"
                   />
                 </motion.form>
               )}
             </AnimatePresence>
 
-            <HeaderButton onClick={() => setIsSearchOpen(!isSearchOpen)} icon={Search} className="hidden md:flex" />
-            <HeaderButton onClick={() => setIsAIChatOpen(true)} icon={MessageSquare} />
-            <HeaderButton onClick={() => window.location.reload()} icon={Zap} className="hidden sm:flex" />
-            <HeaderButton onClick={toggleLanguage} icon={Languages} label={language.toUpperCase()} />
-            <HeaderButton onClick={toggleTheme} icon={theme === 'dark' ? Sun : Moon} />
+            <HeaderButton onClick={() => setIsSearchOpen(!isSearchOpen)} icon={Search} className="hidden md:flex" testId="button-search" />
+            <HeaderButton onClick={() => setIsAIChatOpen(true)} icon={MessageSquare} testId="button-ai-chat" />
+            <HeaderButton onClick={() => window.location.reload()} icon={Zap} className="hidden sm:flex" testId="button-refresh" />
+            <HeaderButton onClick={toggleLanguage} icon={Languages} label={language.toUpperCase()} testId="button-language" />
+            <HeaderButton onClick={toggleTheme} icon={theme === 'dark' ? Sun : Moon} testId="button-theme" />
           </div>
         </div>
       </header>
       
       {/* Breaking News Ticker */}
-      <div className="fixed top-16 left-0 right-0 z-[90] bg-primary/10 border-b border-primary/20 h-8 flex items-center overflow-hidden backdrop-blur-sm">
-        <div className="bg-primary px-3 h-full flex items-center text-[10px] font-black uppercase tracking-wider text-primary-foreground shrink-0 z-10">
-          Breaking News
+      <div className="fixed top-14 sm:top-16 left-0 right-0 z-[90] bg-primary/10 border-b border-primary/20 h-6 sm:h-8 flex items-center overflow-hidden backdrop-blur-sm">
+        <div className="bg-primary px-2 sm:px-3 h-full flex items-center text-[8px] sm:text-[10px] font-black uppercase tracking-wider text-primary-foreground shrink-0 z-10">
+          {language === 'ar' ? 'عاجل' : 'Breaking'}
         </div>
         <div className="flex-1 overflow-hidden relative">
           <motion.div 
             animate={{ x: [1000, -2000] }}
             transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            className="whitespace-nowrap flex items-center gap-12 text-[11px] font-medium text-foreground"
+            className="whitespace-nowrap flex items-center gap-8 sm:gap-12 text-[10px] sm:text-[11px] font-medium text-foreground"
           >
             <span>Global Pulse: Global markets show steady growth in tech sectors</span>
             <span>Breaking: New advancements in AI news delivery announced</span>
@@ -379,14 +389,15 @@ export function Header() {
   );
 }
 
-function HeaderButton({ onClick, icon: Icon, label, className }: { onClick: () => void, icon: any, label?: string, className?: string }) {
+function HeaderButton({ onClick, icon: Icon, label, className, testId }: { onClick: () => void, icon: any, label?: string, className?: string, testId?: string }) {
   return (
     <button 
       onClick={onClick}
-      className={`px-3 py-2 hover:bg-primary/10 rounded-sm text-foreground hover:text-primary transition-all duration-300 flex items-center gap-2 group ${className}`}
+      className={`px-2 sm:px-3 py-2 hover:bg-primary/10 rounded-sm text-foreground hover:text-primary transition-all duration-300 flex items-center gap-1.5 sm:gap-2 group ${className}`}
+      data-testid={testId}
     >
-      <Icon className="w-[18px] h-[18px] group-hover:scale-110 transition-transform" />
-      {label && <span className="text-[11px] font-bold tracking-tight">{label}</span>}
+      <Icon className="w-4 h-4 sm:w-[18px] sm:h-[18px] group-hover:scale-110 transition-transform" />
+      {label && <span className="text-[10px] sm:text-[11px] font-bold tracking-tight">{label}</span>}
     </button>
   );
 }

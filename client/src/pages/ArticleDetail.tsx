@@ -48,10 +48,10 @@ export default function ArticleDetail() {
         initial={{ opacity: 0, rotateX: 5, y: 50 }}
         animate={{ opacity: 1, rotateX: 0, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="pb-20 preserve-3d"
+        className="pb-12 sm:pb-20 preserve-3d pt-20 sm:pt-24"
       >
         {/* Hero Image */}
-        <div className="relative h-[50vh] min-h-[400px] w-full overflow-hidden">
+        <div className="relative h-[40vh] sm:h-[45vh] md:h-[50vh] min-h-[280px] sm:min-h-[350px] md:min-h-[400px] w-full overflow-hidden">
           <img 
             src={bgImage} 
             alt={article.title}
@@ -60,18 +60,18 @@ export default function ArticleDetail() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
           
-          <div className="absolute bottom-0 w-full p-6 md:p-12">
+          <div className="absolute bottom-0 w-full p-4 sm:p-6 md:p-12">
             <div className="container mx-auto">
-              <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 text-sm font-medium transition-colors" aria-label={language === 'ar' ? 'العودة إلى الأخبار' : 'Back to News'}>
-                <ArrowLeft className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
-                {language === 'ar' ? 'العودة إلى الأخبار' : 'Back to News'}
+              <Link href="/" className="inline-flex items-center gap-1.5 sm:gap-2 text-white/80 hover:text-white mb-3 sm:mb-6 text-xs sm:text-sm font-medium transition-colors" aria-label={language === 'ar' ? 'العودة إلى الأخبار' : 'Back to News'}>
+                <ArrowLeft className={`w-3 h-3 sm:w-4 sm:h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
+                {language === 'ar' ? 'العودة' : 'Back'}
               </Link>
               
-              <div className="space-y-4 max-w-4xl">
-                <span className="inline-block px-3 py-1 bg-primary text-white text-xs font-bold tracking-widest uppercase rounded-sm">
+              <div className="space-y-2 sm:space-y-4 max-w-4xl">
+                <span className="inline-block px-2 sm:px-3 py-0.5 sm:py-1 bg-primary text-white text-[10px] sm:text-xs font-bold tracking-widest uppercase rounded-sm">
                   {article.category}
                 </span>
-                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight drop-shadow-lg">
+                <h1 className="font-serif text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight drop-shadow-lg line-clamp-3">
                   {article.title}
                 </h1>
               </div>
@@ -80,13 +80,13 @@ export default function ArticleDetail() {
         </div>
 
         {/* Article Body */}
-        <div className="container mx-auto px-4 -mt-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="container mx-auto px-3 sm:px-4 -mt-4 sm:-mt-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12">
             
             {/* Main Content */}
-            <div className="lg:col-span-8 bg-card rounded-t-3xl p-8 md:p-12 shadow-xl border-x border-t border-border/20">
+            <div className="lg:col-span-8 bg-card rounded-t-xl sm:rounded-t-2xl md:rounded-t-3xl p-4 sm:p-6 md:p-8 lg:p-12 shadow-xl border-x border-t border-border/20">
               {/* Meta Header */}
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-8 border-b border-border/40 text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8 pb-4 sm:pb-6 md:pb-8 border-b border-border/40 text-xs sm:text-sm text-muted-foreground">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold overflow-hidden">
                     {article.source.toLowerCase().includes('al jazeera') ? (
@@ -117,62 +117,64 @@ export default function ArticleDetail() {
               </div>
 
               {/* Summary */}
-              <p className="text-xl md:text-2xl font-serif text-foreground/90 leading-relaxed mb-8 italic border-l-4 border-primary pl-6">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-serif text-foreground/90 leading-relaxed mb-4 sm:mb-6 md:mb-8 italic border-l-2 sm:border-l-4 border-primary pl-4 sm:pl-6">
                 {article.summary}
               </p>
 
               {/* Full Content */}
               <div 
-                className="prose prose-lg dark:prose-invert max-w-none font-sans leading-loose text-foreground/80 mb-12"
+                className="prose prose-sm sm:prose-base md:prose-lg dark:prose-invert max-w-none font-sans leading-relaxed sm:leading-loose text-foreground/80 mb-6 sm:mb-8 md:mb-12"
                 dangerouslySetInnerHTML={{ __html: article.content || '' }}
               />
               
-              <div className="mt-12 p-6 bg-muted/30 rounded-xl border border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-                 <div className="flex flex-col">
-                   <span className="text-sm font-medium">{dir === 'rtl' ? 'اقرأ المقال الأصلي في' : 'Read original article at'} {article.source}</span>
-                   <span className="text-xs text-muted-foreground truncate max-w-[200px] sm:max-w-xs">{article.url}</span>
+              <div className="mt-6 sm:mt-8 md:mt-12 p-4 sm:p-6 bg-muted/30 rounded-lg sm:rounded-xl border border-border flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                 <div className="flex flex-col text-center sm:text-left">
+                   <span className="text-xs sm:text-sm font-medium">{dir === 'rtl' ? 'اقرأ المقال الأصلي في' : 'Read original at'} {article.source}</span>
+                   <span className="text-[10px] sm:text-xs text-muted-foreground truncate max-w-[180px] sm:max-w-xs">{article.url}</span>
                  </div>
                  <a 
                    href={article.url} 
                    target="_blank" 
                    rel="noopener noreferrer" 
-                   className="w-full sm:w-auto px-6 py-3 bg-primary text-primary-foreground rounded-lg font-bold text-sm hover:opacity-90 transition-opacity text-center flex items-center justify-center gap-2"
+                   className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-primary text-primary-foreground rounded-md sm:rounded-lg font-bold text-xs sm:text-sm hover:opacity-90 transition-opacity text-center flex items-center justify-center gap-2"
+                   data-testid="button-read-original"
                  >
-                   {dir === 'rtl' ? 'اقرأ المقال الكامل في المصدر' : 'Read full original article'}
+                   {dir === 'rtl' ? 'المصدر الأصلي' : 'Read Original'}
                  </a>
               </div>
             </div>
 
-            {/* Sidebar */}
-            <div className="lg:col-span-4 space-y-8 pt-12">
-              <div className="sticky top-24">
-                <h3 className="font-serif text-xl font-bold mb-6 border-b pb-2">Share this story</h3>
-                <div className="flex flex-col gap-3">
-                  <button className="flex items-center gap-3 w-full p-3 rounded-lg border border-border/40 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-all group">
-                    <Facebook className="w-5 h-5 text-blue-600 group-hover:text-white" />
-                    <span className="font-medium">Share on Facebook</span>
+            {/* Sidebar - Hidden on mobile, shown on lg+ */}
+            <div className="hidden lg:block lg:col-span-4 space-y-6 sm:space-y-8 pt-6 sm:pt-8 lg:pt-12">
+              <div className="sticky top-28">
+                <h3 className="font-serif text-lg sm:text-xl font-bold mb-4 sm:mb-6 border-b pb-2">{language === 'ar' ? 'شارك هذا الخبر' : 'Share this story'}</h3>
+                <div className="flex flex-col gap-2 sm:gap-3">
+                  <button className="flex items-center gap-2 sm:gap-3 w-full p-2.5 sm:p-3 rounded-md sm:rounded-lg border border-border/40 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-all group">
+                    <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 group-hover:text-white" />
+                    <span className="font-medium text-sm">{language === 'ar' ? 'شارك على فيسبوك' : 'Share on Facebook'}</span>
                   </button>
-                  <button className="flex items-center gap-3 w-full p-3 rounded-lg border border-border/40 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all group">
-                    <Twitter className="w-5 h-5 text-sky-500 group-hover:text-white" />
-                    <span className="font-medium">Share on Twitter</span>
+                  <button className="flex items-center gap-2 sm:gap-3 w-full p-2.5 sm:p-3 rounded-md sm:rounded-lg border border-border/40 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all group">
+                    <Twitter className="w-4 h-4 sm:w-5 sm:h-5 text-sky-500 group-hover:text-white" />
+                    <span className="font-medium text-sm">{language === 'ar' ? 'شارك على تويتر' : 'Share on Twitter'}</span>
                   </button>
-                  <button className="flex items-center gap-3 w-full p-3 rounded-lg border border-border/40 hover:bg-blue-700 hover:text-white hover:border-blue-700 transition-all group">
-                    <Linkedin className="w-5 h-5 text-blue-700 group-hover:text-white" />
-                    <span className="font-medium">Share on LinkedIn</span>
+                  <button className="flex items-center gap-2 sm:gap-3 w-full p-2.5 sm:p-3 rounded-md sm:rounded-lg border border-border/40 hover:bg-blue-700 hover:text-white hover:border-blue-700 transition-all group">
+                    <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-700 group-hover:text-white" />
+                    <span className="font-medium text-sm">{language === 'ar' ? 'شارك على لينكد إن' : 'Share on LinkedIn'}</span>
                   </button>
                 </div>
 
-                <div className="mt-12 p-6 bg-gradient-to-br from-primary/10 to-transparent rounded-2xl border border-primary/20">
-                  <h4 className="font-bold text-lg mb-2">Stay Updated</h4>
-                  <p className="text-sm text-muted-foreground mb-4">Get the latest global news delivered directly to your inbox.</p>
+                <div className="mt-8 sm:mt-12 p-4 sm:p-6 bg-gradient-to-br from-primary/10 to-transparent rounded-xl sm:rounded-2xl border border-primary/20">
+                  <h4 className="font-bold text-base sm:text-lg mb-2">{language === 'ar' ? 'ابق على اطلاع' : 'Stay Updated'}</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{language === 'ar' ? 'احصل على آخر الأخبار العالمية مباشرة إلى بريدك الإلكتروني' : 'Get the latest global news delivered to your inbox.'}</p>
                   <div className="flex gap-2">
                     <input 
                       type="email" 
-                      placeholder="Your email" 
-                      className="flex-1 px-3 py-2 rounded-lg border bg-background text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                      placeholder={language === 'ar' ? 'بريدك الإلكتروني' : 'Your email'}
+                      className="flex-1 px-2.5 sm:px-3 py-2 rounded-md sm:rounded-lg border bg-background text-xs sm:text-sm focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                      data-testid="input-email-subscribe"
                     />
-                    <button className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">
-                      Subscribe
+                    <button className="px-3 sm:px-4 py-2 bg-primary text-white rounded-md sm:rounded-lg text-xs sm:text-sm font-bold hover:bg-primary/90 transition-colors">
+                      {language === 'ar' ? 'اشترك' : 'Subscribe'}
                     </button>
                   </div>
                 </div>

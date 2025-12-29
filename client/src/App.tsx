@@ -3,7 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Header";
 import Home from "@/pages/Home";
 import ArticleDetail from "@/pages/ArticleDetail";
@@ -20,16 +20,21 @@ function Router() {
 }
 
 function App() {
+  const sidebarStyle = {
+    "--sidebar-width": "16rem",
+    "--sidebar-width-mobile": "18rem",
+  } as React.CSSProperties;
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <SidebarProvider>
+        <SidebarProvider defaultOpen={false} style={sidebarStyle}>
           <div className="flex min-h-screen w-full">
             <AppSidebar />
-            <div className="flex-1 flex flex-col min-w-0">
+            <SidebarInset className="flex-1 flex flex-col min-w-0">
               <Toaster />
               <Router />
-            </div>
+            </SidebarInset>
           </div>
         </SidebarProvider>
       </TooltipProvider>
