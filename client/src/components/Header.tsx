@@ -79,11 +79,11 @@ export function AppSidebar() {
   return (
     <Sidebar className="bg-sidebar border-r border-sidebar-border transition-all duration-300 ease-in-out">
       <SidebarHeader className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4" dir="ltr">
           <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-sm shadow-xl">
             <Globe className="w-6 h-6 text-primary-foreground" />
           </div>
-          <h1 className="font-serif text-2xl font-black tracking-tighter text-sidebar-foreground">
+          <h1 className="font-serif text-2xl font-black tracking-tighter text-sidebar-foreground" dir="ltr">
             GLOBAL<span className="text-primary">PULSE</span>
           </h1>
         </div>
@@ -300,11 +300,11 @@ export function Header() {
             <SidebarTrigger className="text-foreground hover:text-primary transition-all duration-300">
               <PanelLeft className="w-5 h-5" />
             </SidebarTrigger>
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-3 group" dir="ltr">
               <div className="w-9 h-9 bg-primary flex items-center justify-center transform group-hover:scale-105 transition-all shadow-lg rounded-sm">
                 <Globe className="w-5 h-5 text-primary-foreground" />
               </div>
-              <h1 className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center uppercase">
+              <h1 className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center uppercase" dir="ltr">
                 <span className="text-foreground">GLOBAL</span>
                 <span className="text-primary font-black ml-1.5">PULSE</span>
               </h1>
