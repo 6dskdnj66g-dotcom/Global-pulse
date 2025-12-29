@@ -24,7 +24,7 @@ import {
   SidebarFooter,
   SidebarTrigger
 } from "@/components/ui/sidebar";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const SOURCES = [
@@ -231,6 +231,9 @@ export function AIChatPanel({ isOpen, onClose }: { isOpen: boolean, onClose: () 
               <X className="w-5 h-5" />
             </button>
           </div>
+          <SheetDescription className="sr-only">
+            {language === 'ar' ? 'اسأل المساعد الذكي عن الأخبار' : 'Ask the AI assistant about news'}
+          </SheetDescription>
         </SheetHeader>
 
         <ScrollArea className="flex-1 p-6">
