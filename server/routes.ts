@@ -22,19 +22,41 @@ const parser = new Parser({
 });
 
 const FEEDS = [
-  { url: 'https://www.aljazeera.com/xml/rss/all.xml', lang: 'en', source: 'Al Jazeera' },
-  { url: 'https://feeds.bbci.co.uk/news/rss.xml', lang: 'en', source: 'BBC News' },
-  { url: 'https://www.theguardian.com/rss', lang: 'en', source: 'The Guardian' },
-  { url: 'https://news.sky.com/feeds/rss/world', lang: 'en', source: 'Sky News' },
-  { url: 'http://rss.cnn.com/rss/edition.rss', lang: 'en', source: 'CNN' },
+  // Major US News Sources
   { url: 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml', lang: 'en', source: 'New York Times' },
   { url: 'https://feeds.washingtonpost.com/rss/world', lang: 'en', source: 'Washington Post' },
+  { url: 'http://rss.cnn.com/rss/edition.rss', lang: 'en', source: 'CNN' },
   { url: 'https://feeds.nbcnews.com/nbcnews/public/news', lang: 'en', source: 'NBC News' },
   { url: 'https://abcnews.go.com/abcnews/topstories', lang: 'en', source: 'ABC News' },
+  { url: 'https://feeds.foxnews.com/foxnews/latest', lang: 'en', source: 'Fox News' },
+  { url: 'https://feeds.npr.org/1001/rss.xml', lang: 'en', source: 'NPR' },
+  { url: 'https://www.cbsnews.com/latest/rss/main', lang: 'en', source: 'CBS News' },
+  
+  // Major UK News Sources
+  { url: 'https://feeds.bbci.co.uk/news/rss.xml', lang: 'en', source: 'BBC News' },
+  { url: 'https://www.theguardian.com/world/rss', lang: 'en', source: 'The Guardian' },
+  { url: 'https://news.sky.com/feeds/rss/world.xml', lang: 'en', source: 'Sky News' },
+  { url: 'https://www.independent.co.uk/news/world/rss', lang: 'en', source: 'The Independent' },
+  { url: 'https://www.telegraph.co.uk/rss.xml', lang: 'en', source: 'The Telegraph' },
+  
+  // International News Sources
+  { url: 'https://www.aljazeera.com/xml/rss/all.xml', lang: 'en', source: 'Al Jazeera English' },
+  { url: 'https://www.reuters.com/rssFeed/worldNews', lang: 'en', source: 'Reuters' },
+  { url: 'https://rss.dw.com/xml/rss-en-all', lang: 'en', source: 'Deutsche Welle' },
+  { url: 'https://www.france24.com/en/rss', lang: 'en', source: 'France 24' },
+  { url: 'https://timesofindia.indiatimes.com/rssfeedstopstories.cms', lang: 'en', source: 'Times of India' },
+  { url: 'https://www.japantimes.co.jp/feed/', lang: 'en', source: 'Japan Times' },
+  { url: 'https://www.scmp.com/rss/91/feed', lang: 'en', source: 'South China Morning Post' },
+  { url: 'https://www.abc.net.au/news/feed/51120/rss.xml', lang: 'en', source: 'ABC Australia' },
+  { url: 'https://globalnews.ca/feed/', lang: 'en', source: 'Global News Canada' },
+  
+  // Arabic News Sources
   { url: 'https://www.aljazeera.net/aljazeerarss/feed', lang: 'ar', source: 'Al Jazeera Arabic' },
-  { url: 'https://feeds.bbci.co.uk/arabic/world/rss.xml', lang: 'ar', source: 'BBC Arabic' },
+  { url: 'https://feeds.bbci.co.uk/arabic/rss.xml', lang: 'ar', source: 'BBC Arabic' },
   { url: 'https://www.france24.com/ar/rss', lang: 'ar', source: 'France 24 Arabic' },
   { url: 'https://www.skynewsarabia.com/web/rss', lang: 'ar', source: 'Sky News Arabia' },
+  { url: 'https://arabic.rt.com/rss/', lang: 'ar', source: 'RT Arabic' },
+  { url: 'https://www.alarabiya.net/.mrss/ar.xml', lang: 'ar', source: 'Al Arabiya' },
 ];
 
 export async function registerRoutes(

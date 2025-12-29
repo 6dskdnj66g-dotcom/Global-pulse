@@ -28,12 +28,38 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const SOURCES = [
-  { name: 'BBC News', icon: Radio },
-  { name: 'Al Jazeera', icon: Globe },
-  { name: 'Reuters', icon: TrendingUp },
+  // US Sources
+  { name: 'New York Times', icon: Newspaper },
+  { name: 'Washington Post', icon: Newspaper },
   { name: 'CNN', icon: Newspaper },
+  { name: 'NBC News', icon: Radio },
+  { name: 'ABC News', icon: Radio },
+  { name: 'Fox News', icon: Radio },
+  { name: 'NPR', icon: Radio },
+  { name: 'CBS News', icon: Radio },
+  // UK Sources
+  { name: 'BBC News', icon: Radio },
   { name: 'The Guardian', icon: Newspaper },
   { name: 'Sky News', icon: Radio },
+  { name: 'The Independent', icon: Newspaper },
+  { name: 'The Telegraph', icon: Newspaper },
+  // International
+  { name: 'Al Jazeera English', icon: Globe },
+  { name: 'Reuters', icon: TrendingUp },
+  { name: 'Deutsche Welle', icon: Globe },
+  { name: 'France 24', icon: Globe },
+  { name: 'Times of India', icon: Newspaper },
+  { name: 'Japan Times', icon: Newspaper },
+  { name: 'South China Morning Post', icon: Newspaper },
+  { name: 'ABC Australia', icon: Radio },
+  { name: 'Global News Canada', icon: Globe },
+  // Arabic Sources
+  { name: 'Al Jazeera Arabic', icon: Globe },
+  { name: 'BBC Arabic', icon: Radio },
+  { name: 'France 24 Arabic', icon: Globe },
+  { name: 'Sky News Arabia', icon: Radio },
+  { name: 'RT Arabic', icon: Globe },
+  { name: 'Al Arabiya', icon: Globe },
 ];
 
 export function AppSidebar() {
